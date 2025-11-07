@@ -1,0 +1,14 @@
+# MCP Knowledge Base Server - Core Dependencies
+# Install with: pip install -r requirements.txt
+
+fastmcp>=0.1.0
+lancedb>=0.3.0
+sentence-transformers>=2.2.0
+torch>=2.0.0
+transformers>=4.21.0
+numpy>=1.21.0
+pandas>=1.3.0
+pyarrow>=10.0.0
+pyyaml>=6.0
+aiofiles>=23.0.0
+chardet>=5.0.0

@@ -1,0 +1,25 @@
+# Include documentation
+include README.md
+include LICENSE
+include INSTALL.md
+include LOCAL_DEVELOPMENT.md
+include PUBLISHING.md
+
+# Include configuration examples
+include config.example.yaml
+
+# Include requirements
+include requirements.txt
+include requirements-dev.txt
+
+# Include documentation
+recursive-include docs *.md
+
+# Include scripts
+recursive-include scripts *.sh *.service
+
+# Exclude unnecessary files
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
