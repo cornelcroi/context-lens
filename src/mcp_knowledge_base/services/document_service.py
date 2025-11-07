@@ -18,6 +18,14 @@ from ..storage.lancedb_manager import LanceDBManager, VectorSearchResult
 from ..services.embedding_service import EmbeddingService
 from ..processors.content_extractor import ContentExtractor
 from ..processors.file_readers import FileProcessingError
+from ..utils.github_handler import (
+    is_github_url,
+    parse_github_url,
+    clone_repository,
+    get_repository_files,
+    cleanup_repository,
+    GitHubHandlerError,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -77,8 +85,32 @@ class DocumentService:
     async def add_document(self, file_path: str) -> Dict[str, Any]:
         """Add a document to the knowledge base.
         
+        Supports:
+        - Local file paths: "/path/to/file.py"
+        - GitHub repository URLs: "https://github.com/user/repo"
+        - GitHub file URLs: "https://github.com/user/repo/blob/main/file.py"
+        - GitHub directory URLs: "https://github.com/user/repo/tree/main/src"
+        
         Args:
-            file_path: Path to the document file (.py or .txt)
+            file_path: Path to document file or GitHub URL
+            
+        Returns:
+            Dictionary containing success status and document metadata or error details
+        """
+        self._ensure_initialized()
+        
+        # Check if it's a GitHub URL
+        if is_github_url(file_path):
+            return await self._add_github_repository(file_path)
+        
+        # Handle local file
+        return await self._add_local_file(file_path)
+    
+    async def _add_local_file(self, file_path: str) -> Dict[str, Any]:
+        """Add a local file to the knowledge base.
+        
+        Args:
+            file_path: Path to the document file
             
         Returns:
             Dictionary containing success status and document metadata or error details
@@ -140,6 +172,140 @@ class DocumentService:
                 "error_message": f"Failed to add document: {str(e)}",
                 "error_details": {"file_path": file_path, "error": str(e)}
             }
+    
+    async def _add_github_repository(self, github_url: str) -> Dict[str, Any]:
+        """Add files from a GitHub repository to the knowledge base.
+        
+        Args:
+            github_url: GitHub repository URL
+            
+        Returns:
+            Dictionary containing success status and summary of added files
+        """
+        repo_path = None
+        
+        try:
+            logger.info(f"Processing GitHub URL: {github_url}")
+            
+            # Parse GitHub URL
+            try:
+                repo_url, branch, subpath = parse_github_url(github_url)
+            except GitHubHandlerError as e:
+                return {
+                    "success": False,
+                    "error_type": "invalid_github_url",
+                    "error_message": str(e),
+                    "error_details": {"url": github_url}
+                }
+            
+            # Clone repository
+            try:
+                repo_path = clone_repository(repo_url, branch)
+            except GitHubHandlerError as e:
+                return {
+                    "success": False,
+                    "error_type": "github_clone_error",
+                    "error_message": str(e),
+                    "error_details": {"url": repo_url, "branch": branch}
+                }
+            
+            # Get files to process
+            try:
+                files = get_repository_files(
+                    repo_path, 
+                    subpath, 
+                    self.config.processing.supported_extensions
+                )
+            except GitHubHandlerError as e:
+                return {
+                    "success": False,
+                    "error_type": "github_file_error",
+                    "error_message": str(e),
+                    "error_details": {"subpath": subpath}
+                }
+            
+            if not files:
+                return {
+                    "success": False,
+                    "error_type": "no_files_found",
+                    "error_message": "No supported files found in repository",
+                    "error_details": {
+                        "url": github_url,
+                        "supported_extensions": self.config.processing.supported_extensions
+                    }
+                }
+            
+            logger.info(f"Found {len(files)} files to process from repository")
+            
+            # Process each file
+            added_files = []
+            failed_files = []
+            
+            for file_path in files:
+                try:
+                    result = await self._add_local_file(str(file_path))
+                    if result.get("success"):
+                        added_files.append({
+                            "file_name": file_path.name,
+                            "file_path": str(file_path.relative_to(repo_path)),
+                            "chunks": result["document"]["chunk_count"]
+                        })
+                    else:
+                        failed_files.append({
+                            "file_name": file_path.name,
+                            "error": result.get("error_message", "Unknown error")
+                        })
+                except Exception as e:
+                    logger.warning(f"Failed to process {file_path}: {e}")
+                    failed_files.append({
+                        "file_name": file_path.name,
+                        "error": str(e)
+                    })
+            
+            # Build response
+            total_chunks = sum(f["chunks"] for f in added_files)
+            
+            response = {
+                "success": True,
+                "repository": {
+                    "url": repo_url,
+                    "branch": branch or "default",
+                    "subpath": subpath or "/"
+                },
+                "summary": {
+                    "total_files_found": len(files),
+                    "files_added": len(added_files),
+                    "files_failed": len(failed_files),
+                    "total_chunks": total_chunks
+                },
+                "added_files": added_files[:10],  # Limit to first 10 for response size
+                "message": f"Successfully added {len(added_files)} files from repository with {total_chunks} chunks"
+            }
+            
+            if failed_files:
+                response["failed_files"] = failed_files[:5]  # Limit to first 5
+                response["message"] += f" ({len(failed_files)} files failed)"
+            
+            if len(added_files) > 10:
+                response["message"] += f" (showing first 10 of {len(added_files)} files)"
+            
+            logger.info(f"Repository processing complete: {len(added_files)} files added, {len(failed_files)} failed")
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Unexpected error processing GitHub repository: {e}")
+            return {
+                "success": False,
+                "error_type": "github_processing_error",
+                "error_message": f"Failed to process GitHub repository: {str(e)}",
+                "error_details": {"url": github_url, "error": str(e)}
+            }
+        
+        finally:
+            # Cleanup cloned repository
+            if repo_path:
+                cleanup_repository(repo_path)
     
     async def list_documents(self, limit: Optional[int] = None, offset: int = 0) -> Dict[str, Any]:
         """List all documents in the knowledge base with pagination support.

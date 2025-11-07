@@ -44,10 +44,16 @@ async def get_document_service() -> DocumentService:
 
 @mcp.tool()
 async def add_document(file_path: str) -> Dict[str, Any]:
-    """Add a document to the knowledge base.
+    """Add a document or GitHub repository to the knowledge base.
+    
+    Supports:
+    - Local files: "/path/to/file.py"
+    - GitHub repos: "https://github.com/user/repo"
+    - GitHub files: "https://github.com/user/repo/blob/main/file.py"
+    - GitHub dirs: "https://github.com/user/repo/tree/main/src"
     
     Args:
-        file_path: Path to the document file (.py or .txt)
+        file_path: Path to document file or GitHub URL
         
     Returns:
         Dictionary containing success status and document metadata or error details
@@ -55,11 +61,9 @@ async def add_document(file_path: str) -> Dict[str, Any]:
     try:
         log_operation_start("add_document", file_path=file_path)
         
-        # Validate input parameters using centralized validation
         validate_file_path(file_path)
         file_path = file_path.strip()
         
-        # Get document service and add document
         doc_service = await get_document_service()
         result = await doc_service.add_document(file_path)
         
@@ -94,15 +98,12 @@ async def list_documents(limit: Optional[int] = 100, offset: int = 0) -> Dict[st
     try:
         log_operation_start("list_documents", limit=limit, offset=offset)
         
-        # Validate input parameters using centralized validation
-        # Convert 0 to None for no limit
         if limit == 0:
             limit = None
         
         validate_limit_parameter(limit, min_value=1, max_value=1000, parameter_name="limit")
         validate_offset_parameter(offset, max_value=100000)
         
-        # Get document service and list documents
         doc_service = await get_document_service()
         result = await doc_service.list_documents(limit=limit, offset=offset)
         
@@ -138,13 +139,11 @@ async def search_documents(query: str, limit: int = 10) -> Dict[str, Any]:
         log_operation_start("search_documents", query=query[:50] + "..." if len(query) > 50 else query, 
                           limit=limit)
         
-        # Validate input parameters using centralized validation
         validate_query_parameter(query, min_length=1, max_length=10000)
         validate_limit_parameter(limit, min_value=1, max_value=100, parameter_name="limit")
         
         query = query.strip()
         
-        # Get document service and search documents
         doc_service = await get_document_service()
         result = await doc_service.search_documents(query=query, limit=limit)
         
@@ -174,7 +173,6 @@ async def clear_knowledge_base() -> Dict[str, Any]:
     try:
         log_operation_start("clear_knowledge_base")
         
-        # Get document service and clear knowledge base
         doc_service = await get_document_service()
         result = await doc_service.clear_knowledge_base()
         
@@ -197,10 +195,7 @@ async def initialize_server() -> None:
     """Initialize the MCP server and its components."""
     try:
         logger.info("Initializing MCP Knowledge Base Server...")
-        
-        # Initialize document service
         await get_document_service()
-        
         logger.info("MCP Knowledge Base Server initialized successfully")
         
     except Exception as e:

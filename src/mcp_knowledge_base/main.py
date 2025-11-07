@@ -35,7 +35,6 @@ def setup_logging(log_level: str = "INFO", log_dir: Optional[str] = None) -> Non
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, log_level.upper(), logging.INFO))
     
-    # Remove existing handlers
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
     
@@ -200,7 +199,6 @@ async def main() -> int:
         # Validate configuration after overrides
         config.validate()
         
-        # Setup logging based on configuration
         setup_logging(config.server.log_level, log_dir=args.log_dir)
         
         logger = logging.getLogger(__name__)
@@ -215,7 +213,6 @@ async def main() -> int:
             print("=" * 80 + "\n")
             return 0
         
-        # Setup signal handlers for graceful shutdown
         setup_signal_handlers()
         
         logger.info("=" * 80)
