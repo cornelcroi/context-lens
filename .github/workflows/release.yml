@@ -27,6 +27,12 @@ jobs:
             exit 1
           fi
       
+      - name: Extract version from tag
+        id: get_version
+        run: echo "VERSION=${TAG#v}" >> $GITHUB_OUTPUT
+        env:
+          TAG: ${{ inputs.tag }}
+      
       - name: Check if tag already exists
         run: |
           if git rev-parse "${{ inputs.tag }}" >/dev/null 2>&1; then
@@ -34,10 +40,28 @@ jobs:
             exit 1
           fi
       
-      - name: Create and push tag
+      - name: Update version in files
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          
+          # Update pyproject.toml
+          sed -i "s/^version = \".*\"/version = \"$VERSION\"/" pyproject.toml
+          
+          # Update __init__.py
+          sed -i "s/^__version__ = \".*\"/__version__ = \"$VERSION\"/" src/context_lens/__init__.py
+          
+          echo "Updated version to $VERSION"
+      
+      - name: Commit version bump
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml src/context_lens/__init__.py
+          git commit -m "Bump version to ${{ steps.get_version.outputs.VERSION }}"
+          git push origin main
+      
+      - name: Create and push tag
+        run: |
           git tag -a "${{ inputs.tag }}" -m "Release ${{ inputs.tag }}"
           git push origin "${{ inputs.tag }}"
       
@@ -53,12 +77,6 @@ jobs:
       
       - name: Build package
         run: python -m build
-      
-      - name: Extract version from tag
-        id: get_version
-        run: echo "VERSION=${TAG#v}" >> $GITHUB_OUTPUT
-        env:
-          TAG: ${{ inputs.tag }}
       
       - name: Generate changelog
         id: changelog
