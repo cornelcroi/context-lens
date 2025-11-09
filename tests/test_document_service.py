@@ -5,8 +5,8 @@ import asyncio
 import tempfile
 from pathlib import Path
 
-from mcp_knowledge_base.services.document_service import DocumentService
-from mcp_knowledge_base.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from codelens.services.document_service import DocumentService
+from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 class TestDocumentService:

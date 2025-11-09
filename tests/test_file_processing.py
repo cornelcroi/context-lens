@@ -4,7 +4,7 @@ import pytest
 import tempfile
 from pathlib import Path
 
-from mcp_knowledge_base.processors import (
+from codelens.processors import (
     FileReader,
     PythonFileReader,
     TextFileReader,

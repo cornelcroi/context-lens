@@ -71,7 +71,14 @@ class ProcessingConfig:
     max_file_size_mb: int = 10
     chunk_size: int = 1000
     chunk_overlap: int = 200
-    supported_extensions: List[str] = field(default_factory=lambda: [".py", ".txt"])
+    supported_extensions: List[str] = field(default_factory=lambda: [
+        ".py", ".txt", ".md",  # Python, text, markdown
+        ".js", ".jsx", ".ts", ".tsx",  # JavaScript/TypeScript
+        ".java", ".cpp", ".c", ".h", ".hpp",  # Java, C/C++
+        ".go", ".rs", ".rb", ".php",  # Go, Rust, Ruby, PHP
+        ".json", ".yaml", ".yml", ".toml",  # Config files
+        ".sh", ".bash", ".zsh"  # Shell scripts
+    ])
     
     def validate(self) -> None:
         """Validate processing configuration."""

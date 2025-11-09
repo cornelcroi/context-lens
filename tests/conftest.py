@@ -1,11 +1,11 @@
-"""Pytest configuration and fixtures for MCP Knowledge Base Server tests."""
+"""Pytest configuration and fixtures for CodeLens tests."""
 
 import pytest
 import tempfile
 import shutil
 from pathlib import Path
 
-from mcp_knowledge_base.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 @pytest.fixture

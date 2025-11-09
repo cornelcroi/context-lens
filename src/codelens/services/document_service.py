@@ -132,6 +132,23 @@ class DocumentService:
                     "error_details": e.details
                 }
             
+            # Check if document already exists with same content hash (incremental update)
+            existing_doc_info = await self.get_document_info(file_path)
+            if existing_doc_info.get("success"):
+                existing_hash = existing_doc_info["document"].get("content_hash")
+                if existing_hash == metadata.content_hash:
+                    logger.info(f"Document {file_path} already exists with same content, skipping")
+                    return {
+                        "success": True,
+                        "skipped": True,
+                        "document": existing_doc_info["document"],
+                        "message": f"Document '{metadata.file_name}' already up-to-date (same content hash)"
+                    }
+                else:
+                    # Content changed, remove old version
+                    logger.info(f"Document {file_path} content changed, updating")
+                    await self.db_manager.remove_document(file_path)
+            
             # Set ingestion timestamp
             metadata.ingestion_timestamp = datetime.utcnow()
             
@@ -432,15 +449,15 @@ class DocumentService:
                 results_list.append({
                     "document_id": result.document_id,
                     "document_path": result.document_path,
-                    "relevance_score": round(result.relevance_score, 4),
+                    "relevance_score": round(float(result.relevance_score), 4),
                     "content_excerpt": result.content_excerpt,
                     "metadata": {
                         "id": result.metadata.id,
                         "file_name": result.metadata.file_name,
                         "file_type": result.metadata.file_type,
-                        "file_size": result.metadata.file_size,
+                        "file_size": int(result.metadata.file_size) if result.metadata.file_size is not None else None,
                         "ingestion_timestamp": result.metadata.ingestion_timestamp.isoformat() if result.metadata.ingestion_timestamp else None,
-                        "chunk_count": result.metadata.chunk_count
+                        "chunk_count": int(result.metadata.chunk_count) if result.metadata.chunk_count is not None else None
                     }
                 })
             
@@ -527,6 +544,95 @@ class DocumentService:
         except Exception as e:
             logger.error(f"Failed to get document {document_id}: {e}")
             return None
+    
+    async def remove_document(self, file_path: str) -> Dict[str, Any]:
+        """Remove a document from the knowledge base.
+        
+        Args:
+            file_path: Path to the document file to remove
+            
+        Returns:
+            Dictionary containing success status and removal details
+        """
+        self._ensure_initialized()
+        
+        try:
+            logger.info(f"Removing document: {file_path}")
+            
+            # Remove from database
+            await self.db_manager.remove_document(file_path)
+            
+            logger.info(f"Successfully removed document: {file_path}")
+            
+            return {
+                "success": True,
+                "file_path": file_path,
+                "message": f"Document '{file_path}' removed successfully"
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to remove document {file_path}: {e}")
+            return {
+                "success": False,
+                "error_type": "document_removal_error",
+                "error_message": f"Failed to remove document: {str(e)}",
+                "error_details": {"file_path": file_path, "error": str(e)}
+            }
+    
+    async def get_document_info(self, file_path: str) -> Dict[str, Any]:
+        """Get information about a document in the knowledge base.
+        
+        Args:
+            file_path: Path to the document file
+            
+        Returns:
+            Dictionary containing document metadata or error if not found
+        """
+        self._ensure_initialized()
+        
+        try:
+            logger.info(f"Getting info for document: {file_path}")
+            
+            # Get all documents and find the matching one
+            all_docs = await self.db_manager.list_all_documents()
+            
+            matching_doc = None
+            for doc in all_docs:
+                if doc.file_path == file_path:
+                    matching_doc = doc
+                    break
+            
+            if not matching_doc:
+                return {
+                    "success": False,
+                    "error_type": "document_not_found",
+                    "error_message": f"Document not found: {file_path}",
+                    "error_details": {"file_path": file_path}
+                }
+            
+            return {
+                "success": True,
+                "document": {
+                    "id": matching_doc.id,
+                    "file_path": matching_doc.file_path,
+                    "file_name": matching_doc.file_name,
+                    "file_size": matching_doc.file_size,
+                    "file_type": matching_doc.file_type,
+                    "content_hash": matching_doc.content_hash,
+                    "chunk_count": matching_doc.chunk_count,
+                    "ingestion_timestamp": matching_doc.ingestion_timestamp.isoformat() if matching_doc.ingestion_timestamp else None
+                },
+                "message": f"Document '{matching_doc.file_name}' found in knowledge base"
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to get document info for {file_path}: {e}")
+            return {
+                "success": False,
+                "error_type": "document_info_error",
+                "error_message": f"Failed to get document info: {str(e)}",
+                "error_details": {"file_path": file_path, "error": str(e)}
+            }
     
     async def get_statistics(self) -> Dict[str, Any]:
         """Get knowledge base statistics.

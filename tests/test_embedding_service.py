@@ -4,8 +4,8 @@ import pytest
 import asyncio
 from unittest.mock import patch, MagicMock
 
-from mcp_knowledge_base.services.embedding_service import EmbeddingService
-from mcp_knowledge_base.config import EmbeddingConfig, ProcessingConfig
+from codelens.services.embedding_service import EmbeddingService
+from codelens.config import EmbeddingConfig, ProcessingConfig
 
 
 class TestEmbeddingService:

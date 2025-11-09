@@ -1,7 +1,7 @@
 """Tests for comprehensive error handling module."""
 
 import pytest
-from src.mcp_knowledge_base.errors import (
+from src.codelens.errors import (
     ErrorCategory,
     KnowledgeBaseError,
     FileValidationError,

@@ -5,9 +5,9 @@ import asyncio
 from datetime import datetime
 from pathlib import Path
 
-from mcp_knowledge_base.storage.lancedb_manager import LanceDBManager, VectorSearchResult
-from mcp_knowledge_base.models.data_models import DocumentMetadata, DocumentChunk
-from mcp_knowledge_base.config import DatabaseConfig
+from codelens.storage.lancedb_manager import LanceDBManager, VectorSearchResult
+from codelens.models.data_models import DocumentMetadata, DocumentChunk
+from codelens.config import DatabaseConfig
 
 
 class TestLanceDBManager:

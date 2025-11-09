@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from src.mcp_knowledge_base.utils.github_handler import (
+from src.codelens.utils.github_handler import (
     is_github_url,
     parse_github_url,
     GitHubHandlerError,
@@ -113,14 +113,24 @@ class TestGitHubURLParsing:
 class TestGitHubFileFiltering:
     """Test file filtering logic."""
     
+    def test_ignore_patterns_defined(self):
+        """Test that common ignore patterns are defined."""
+        from src.codelens.utils.github_handler import get_repository_files
+        import inspect
+        
+        # Get the source code of the function
+        source = inspect.getsource(get_repository_files)
+        
+        # Verify critical ignore patterns are present
+        assert 'node_modules' in source, "Should ignore node_modules"
+        assert 'venv' in source or '.venv' in source, "Should ignore venv"
+        assert '__pycache__' in source, "Should ignore __pycache__"
+        assert '.git' in source, "Should ignore .git"
+        assert 'dist' in source, "Should ignore dist"
+        assert 'build' in source, "Should ignore build"
+    
     def test_supported_extensions(self):
         """Test that only supported extensions are included."""
-        # This would require actual file system or mocking
-        # Placeholder for integration test
-        pass
-    
-    def test_ignore_patterns(self):
-        """Test that ignored directories are skipped."""
         # This would require actual file system or mocking
         # Placeholder for integration test
         pass

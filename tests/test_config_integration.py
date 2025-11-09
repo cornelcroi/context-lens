@@ -5,8 +5,8 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from src.mcp_knowledge_base.config import Config
-from src.mcp_knowledge_base.services.document_service import DocumentService
+from src.codelens.config import Config
+from src.codelens.services.document_service import DocumentService
 
 
 class TestConfigurationIntegration:
@@ -113,7 +113,7 @@ processing:
         
         try:
             # Should raise ConfigurationError due to invalid overlap
-            from src.mcp_knowledge_base.config import ConfigurationError
+            from src.codelens.config import ConfigurationError
             with pytest.raises(ConfigurationError):
                 Config.from_file(temp_path)
                 

@@ -55,15 +55,22 @@ coverage.xml
 # Data and logs
 logs/
 *.log
-*.db
-knowledge_base.db
 
-# Models and cache
+# Databases (users create their own)
+*.db/
+knowledge_base.db/
+test_*.db/
+
+# Models and cache (users download their own)
 models/
 test_models/
 cache/
 test_cache/
 .cache/
+
+# Test artifacts
+test_inspector_connection.sh
+inspector_config.json
 
 # Environment
 .env

@@ -205,6 +205,17 @@ class LanceDBManager:
             logger.error(f"Failed to add document vectors: {e}")
             raise Exception(f"Failed to add document vectors: {str(e)}")
     
+    async def remove_document(self, file_path: str) -> None:
+        """Remove a document and its chunks by file path.
+        
+        Args:
+            file_path: Path to the document to remove
+            
+        Raises:
+            Exception: If removal fails
+        """
+        await self._remove_document_by_path(file_path)
+    
     async def _remove_document_by_path(self, file_path: str) -> None:
         """Remove a document and its chunks by file path."""
         try:

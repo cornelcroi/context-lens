@@ -1,1 +1,1 @@
-# Test package for MCP Knowledge Base Server
+# Test package for CodeLens

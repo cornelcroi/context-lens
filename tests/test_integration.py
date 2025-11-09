@@ -1,4 +1,4 @@
-"""Integration tests for MCP Knowledge Base Server.
+"""Integration tests for CodeLens.
 
 These tests verify end-to-end workflows including:
 - Complete document ingestion workflow
@@ -12,15 +12,17 @@ import asyncio
 import tempfile
 from pathlib import Path
 
-from mcp_knowledge_base.server import (
+from codelens.server import (
     add_document as add_document_tool,
     list_documents as list_documents_tool,
     search_documents as search_documents_tool,
     clear_knowledge_base as clear_knowledge_base_tool,
-    initialize_server,
-    cleanup_server,
     get_document_service
 )
+
+# Note: initialize_server and cleanup_server have been removed
+# The server now uses lazy initialization - resources are initialized
+# automatically on first tool invocation via get_document_service()
 
 # Helper functions to call the FastMCP tools
 async def add_document(file_path: str):
@@ -38,7 +40,7 @@ async def search_documents(query: str, limit=10):
 async def clear_knowledge_base():
     """Call the clear_knowledge_base tool."""
     return await clear_knowledge_base_tool.fn()
-from mcp_knowledge_base.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 @pytest.fixture
@@ -244,7 +246,7 @@ class TestEndToEndWorkflow:
         
         try:
             # Initialize server
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add all documents
             results = []
@@ -275,7 +277,7 @@ class TestEndToEndWorkflow:
                 assert "ingestion_timestamp" in doc
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_document_update_workflow(self, integration_config, temp_dir):
@@ -289,7 +291,7 @@ class TestEndToEndWorkflow:
         doc_file.write_text("def old_function():\n    pass")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add document first time
             result1 = await add_document(str(doc_file))
@@ -312,7 +314,7 @@ class TestEndToEndWorkflow:
             assert len(list_result["documents"]) == 1
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
 
 
 class TestSearchFunctionality:
@@ -326,7 +328,7 @@ class TestSearchFunctionality:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -356,7 +358,7 @@ class TestSearchFunctionality:
             assert found_binary_search, "Should find binary search related content"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_search_with_different_queries(self, integration_config, sample_documents, temp_dir):
@@ -366,7 +368,7 @@ class TestSearchFunctionality:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -393,7 +395,7 @@ class TestSearchFunctionality:
                     assert "relevance_score" in search_result
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_search_with_limit(self, integration_config, sample_documents, temp_dir):
@@ -403,7 +405,7 @@ class TestSearchFunctionality:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -423,7 +425,7 @@ class TestSearchFunctionality:
             assert len(result_1["results"]) == 1
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_search_empty_knowledge_base(self, integration_config, temp_dir):
@@ -433,7 +435,7 @@ class TestSearchFunctionality:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Search without adding any documents
             result = await search_documents("test query")
@@ -442,7 +444,7 @@ class TestSearchFunctionality:
             assert result["result_count"] == 0
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
 
 
 class TestErrorScenarios:
@@ -456,7 +458,7 @@ class TestErrorScenarios:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await add_document("/nonexistent/path/file.py")
             assert result["success"] is False
@@ -464,7 +466,7 @@ class TestErrorScenarios:
             assert "error_message" in result
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_add_unsupported_file_type(self, integration_config, temp_dir):
@@ -478,14 +480,14 @@ class TestErrorScenarios:
         unsupported_file.write_text("content")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await add_document(str(unsupported_file))
             assert result["success"] is False
             assert result["error_type"] == "no_reader_available"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_add_empty_file(self, integration_config, temp_dir):
@@ -499,7 +501,7 @@ class TestErrorScenarios:
         empty_file.write_text("")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await add_document(str(empty_file))
             # Empty files may be accepted with a warning or rejected
@@ -511,7 +513,7 @@ class TestErrorScenarios:
                 assert result["error_type"] in ["empty_content", "processing_error"]
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_search_with_empty_query(self, integration_config, temp_dir):
@@ -521,14 +523,14 @@ class TestErrorScenarios:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await search_documents("")
             assert result["success"] is False
             assert result["error_type"] == "invalid_parameter"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_search_with_whitespace_query(self, integration_config, temp_dir):
@@ -538,14 +540,14 @@ class TestErrorScenarios:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await search_documents("   ")
             assert result["success"] is False
             assert result["error_type"] == "invalid_parameter"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_invalid_limit_parameter(self, integration_config, temp_dir):
@@ -555,7 +557,7 @@ class TestErrorScenarios:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Test negative limit
             result = await search_documents("test", limit=-1)
@@ -568,7 +570,7 @@ class TestErrorScenarios:
             assert result["error_type"] == "invalid_parameter"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_invalid_offset_parameter(self, integration_config, temp_dir):
@@ -578,7 +580,7 @@ class TestErrorScenarios:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Test negative offset
             result = await list_documents(offset=-1)
@@ -586,7 +588,7 @@ class TestErrorScenarios:
             assert result["error_type"] == "invalid_parameter"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_add_file_with_invalid_encoding(self, integration_config, temp_dir):
@@ -600,7 +602,7 @@ class TestErrorScenarios:
         binary_file.write_bytes(b'\x80\x81\x82\x83')
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             result = await add_document(str(binary_file))
             # Should either succeed with encoding detection or fail gracefully
@@ -610,7 +612,7 @@ class TestErrorScenarios:
                 assert "error_message" in result
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
 
 
 class TestMCPToolIntegration:
@@ -624,7 +626,7 @@ class TestMCPToolIntegration:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Test that all tools can be called
             # add_document
@@ -646,7 +648,7 @@ class TestMCPToolIntegration:
             assert "success" in result
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_tool_parameter_validation(self, integration_config, temp_dir):
@@ -656,7 +658,7 @@ class TestMCPToolIntegration:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Test add_document with empty path
             result = await add_document("")
@@ -674,7 +676,7 @@ class TestMCPToolIntegration:
             assert result["error_type"] == "invalid_parameter"
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_tool_error_responses(self, integration_config, temp_dir):
@@ -684,7 +686,7 @@ class TestMCPToolIntegration:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Test various error scenarios
             errors = []
@@ -710,7 +712,7 @@ class TestMCPToolIntegration:
                 assert len(error["error_message"]) > 0
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
 
 
 class TestPaginationAndLimits:
@@ -724,7 +726,7 @@ class TestPaginationAndLimits:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -753,7 +755,7 @@ class TestPaginationAndLimits:
             assert len(page1_ids.intersection(page2_ids)) == 0
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_list_documents_no_limit(self, integration_config, sample_documents, temp_dir):
@@ -763,7 +765,7 @@ class TestPaginationAndLimits:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -776,7 +778,7 @@ class TestPaginationAndLimits:
             assert result["pagination"]["total_count"] == 3
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
 
 
 class TestClearKnowledgeBase:
@@ -790,7 +792,7 @@ class TestClearKnowledgeBase:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             for doc_path in sample_documents.values():
@@ -817,7 +819,7 @@ class TestClearKnowledgeBase:
             assert len(search_result["results"]) == 0
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_clear_empty_knowledge_base(self, integration_config, temp_dir):
@@ -827,7 +829,7 @@ class TestClearKnowledgeBase:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Clear without adding any documents
             result = await clear_knowledge_base()
@@ -835,7 +837,7 @@ class TestClearKnowledgeBase:
             assert result["documents_removed"] == 0
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization
     
     @pytest.mark.asyncio
     async def test_add_after_clear(self, integration_config, sample_documents, temp_dir):
@@ -845,7 +847,7 @@ class TestClearKnowledgeBase:
         os.environ['EMBEDDING_CACHE_DIR'] = str(temp_dir / "models")
         
         try:
-            await initialize_server()
+            pass  # await initialize_server() - No longer needed, lazy initialization
             
             # Add documents
             doc_path = list(sample_documents.values())[0]
@@ -863,4 +865,4 @@ class TestClearKnowledgeBase:
             assert len(list_result["documents"]) == 1
             
         finally:
-            await cleanup_server()
+            pass  # await cleanup_server() - No longer needed, lazy initialization

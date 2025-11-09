@@ -144,7 +144,14 @@ def clone_repository(repo_url: str, branch: Optional[str] = None,
 
 def get_repository_files(repo_path: Path, subpath: Optional[str] = None,
                         supported_extensions: Optional[List[str]] = None) -> List[Path]:
-    """Get list of files from repository.
+    """Get list of files from repository, excluding common ignore patterns.
+    
+    Automatically skips:
+    - Dependencies: node_modules, venv, vendor, etc.
+    - Build outputs: dist, build, target, etc.
+    - Version control: .git, .svn, etc.
+    - IDE files: .idea, .vscode, etc.
+    - Cache directories: __pycache__, .cache, etc.
     
     Args:
         repo_path: Path to cloned repository
@@ -152,7 +159,7 @@ def get_repository_files(repo_path: Path, subpath: Optional[str] = None,
         supported_extensions: List of file extensions to include (e.g., ['.py', '.txt'])
         
     Returns:
-        List of file paths
+        List of file paths (filtered and sorted)
     """
     if supported_extensions is None:
         supported_extensions = ['.py', '.txt', '.md']
@@ -175,9 +182,34 @@ def get_repository_files(repo_path: Path, subpath: Optional[str] = None,
     # Collect files recursively
     files = []
     ignore_patterns = {
-        '.git', '__pycache__', 'node_modules', '.venv', 'venv',
-        '.pytest_cache', '.mypy_cache', '.tox', 'dist', 'build',
-        '.egg-info', '.eggs', 'htmlcov', '.coverage'
+        # Version control
+        '.git', '.svn', '.hg',
+        
+        # Python
+        '__pycache__', 'venv', '.venv', 'env', '.env', 'virtualenv',
+        '.pytest_cache', '.mypy_cache', '.tox', '.nox',
+        'dist', 'build', '*.egg-info', '.eggs', 
+        'htmlcov', '.coverage', '.hypothesis',
+        
+        # JavaScript/Node
+        'node_modules', 'bower_components', '.npm', '.yarn',
+        'jspm_packages', 'web_modules',
+        
+        # Build outputs
+        'target', 'out', 'bin', 'obj', '.next', '.nuxt',
+        '.cache', '.parcel-cache', '.webpack',
+        
+        # IDE
+        '.idea', '.vscode', '.vs', '*.swp', '*.swo',
+        
+        # OS
+        '.DS_Store', 'Thumbs.db',
+        
+        # Logs
+        'logs', '*.log',
+        
+        # Dependencies (other languages)
+        'vendor', 'packages', '.bundle',
     }
     
     for file_path in base_path.rglob('*'):

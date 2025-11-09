@@ -3,13 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mcp-knowledge-base"
+name = "codelens"
 version = "0.1.0"
-description = "MCP Knowledge Base Server - A vector-based document search system"
+description = "CodeLens - Give your LLM glasses to understand meaning, not just read words. Semantic search for AI assistants."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 authors = [
-    {name = "MCP Knowledge Base", email = "info@example.com"}
+    {name = "Corneliu Croitoru", email = "cornel.croitoru@gmail.com"}
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -48,13 +48,17 @@ dev = [
     "mypy>=1.0.0",
 ]
 
+# Entry points for running the server
+# - CLI entry point: codelens (via main.py with argument parsing)
+# - Module entry point: python -m codelens.server (for MCP Inspector)
+# - Direct import: from codelens.server import app (for programmatic use)
 [project.scripts]
-mcp-knowledge-base = "mcp_knowledge_base.main:run"
+codelens = "codelens.main:run"
 
 [project.urls]
-Homepage = "https://github.com/example/mcp-knowledge-base"
-Repository = "https://github.com/example/mcp-knowledge-base"
-Issues = "https://github.com/example/mcp-knowledge-base/issues"
+Homepage = "https://github.com/example/codelens"
+Repository = "https://github.com/example/codelens"
+Issues = "https://github.com/example/codelens/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

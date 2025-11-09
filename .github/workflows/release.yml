@@ -53,13 +53,13 @@ jobs:
             ## Installation
             
             ```bash
-            pip install mcp-knowledge-base==${{ steps.get_version.outputs.VERSION }}
+            pip install codelens==${{ steps.get_version.outputs.VERSION }}
             ```
             
             Or use with uvx:
             
             ```bash
-            uvx mcp-knowledge-base
+            uvx codelens
             ```
           files: |
             dist/*

@@ -3,8 +3,8 @@
 import pytest
 from fastmcp import FastMCP
 
-from mcp_knowledge_base.server import mcp, app
-from mcp_knowledge_base.config import Config
+from codelens.server import mcp, app
+from codelens.config import Config
 
 
 class TestMCPServer:
@@ -14,7 +14,7 @@ class TestMCPServer:
         """Test that the MCP server is properly initialized."""
         # Verify mcp is a FastMCP instance
         assert isinstance(mcp, FastMCP)
-        assert mcp.name == "Knowledge Base Server"
+        assert mcp.name == "CodeLens"
         
         # Verify app is the same as mcp
         assert app is mcp
@@ -22,7 +22,7 @@ class TestMCPServer:
     def test_tools_are_registered(self):
         """Test that all required tools are registered."""
         # Import the tool functions to verify they exist as FunctionTool objects
-        from mcp_knowledge_base.server import add_document, list_documents, search_documents, clear_knowledge_base
+        from codelens.server import add_document, list_documents, search_documents, clear_knowledge_base
         
         # Verify they are FunctionTool objects (wrapped by FastMCP)
         from fastmcp.tools import FunctionTool
@@ -39,14 +39,14 @@ class TestMCPServer:
     
     def test_tool_descriptions(self):
         """Test that tools have proper descriptions."""
-        from mcp_knowledge_base.server import add_document, list_documents, search_documents, clear_knowledge_base
+        from codelens.server import add_document, list_documents, search_documents, clear_knowledge_base
         
         # Verify tools have descriptions
         assert add_document.description is not None
-        assert "Add a document" in add_document.description
+        assert "Adds a document" in add_document.description
         
         assert list_documents.description is not None
-        assert "List all documents" in list_documents.description
+        assert "Lists all documents" in list_documents.description
         
         assert search_documents.description is not None
         assert "Search documents" in search_documents.description
@@ -56,11 +56,9 @@ class TestMCPServer:
     
     def test_server_utility_functions(self):
         """Test that server utility functions exist."""
-        from mcp_knowledge_base.server import initialize_server, cleanup_server, get_document_service
+        from codelens.server import get_document_service
         
-        # Verify functions exist and are callable
-        assert callable(initialize_server)
-        assert callable(cleanup_server)
+        # Verify get_document_service exists and is callable
         assert callable(get_document_service)
 
 
@@ -71,8 +69,8 @@ class TestMCPServerIntegration:
         """Test that the server can be imported without errors."""
         # This test verifies that all imports work correctly
         try:
-            from mcp_knowledge_base.server import (
-                mcp, app, initialize_server, cleanup_server,
+            from codelens.server import (
+                mcp, app, get_document_service,
                 add_document, list_documents, search_documents, clear_knowledge_base
             )
             # If we get here, imports worked
@@ -92,7 +90,7 @@ class TestMCPServerIntegration:
     
     def test_document_service_integration(self):
         """Test that DocumentService can be imported and instantiated."""
-        from mcp_knowledge_base.services.document_service import DocumentService
+        from codelens.services.document_service import DocumentService
         
         # Verify DocumentService can be instantiated
         config = Config.from_env()

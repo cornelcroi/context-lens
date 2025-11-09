@@ -3,9 +3,9 @@
 import pytest
 from pathlib import Path
 
-from mcp_knowledge_base.processors.content_extractor import ContentExtractor
-from mcp_knowledge_base.processors import FileProcessingError
-from mcp_knowledge_base.models.data_models import DocumentMetadata, DocumentChunk
+from codelens.processors.content_extractor import ContentExtractor
+from codelens.processors import FileProcessingError
+from codelens.models.data_models import DocumentMetadata, DocumentChunk
 
 
 class TestContentExtractor:

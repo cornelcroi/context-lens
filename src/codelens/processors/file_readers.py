@@ -47,7 +47,14 @@ class FileProcessingError(KnowledgeBaseError):
 class FileReader(ABC):
     """Base class for file readers."""
     
-    SUPPORTED_EXTENSIONS = [".py", ".txt"]
+    SUPPORTED_EXTENSIONS = [
+        ".py", ".txt", ".md",  # Python, text, markdown
+        ".js", ".jsx", ".ts", ".tsx",  # JavaScript/TypeScript
+        ".java", ".cpp", ".c", ".h", ".hpp",  # Java, C/C++
+        ".go", ".rs", ".rb", ".php",  # Go, Rust, Ruby, PHP
+        ".json", ".yaml", ".yml", ".toml",  # Config files
+        ".sh", ".bash", ".zsh"  # Shell scripts
+    ]
     MAX_FILE_SIZE_MB = 10
     
     def __init__(self):
@@ -311,11 +318,21 @@ class PythonFileReader(FileReader):
 
 
 class TextFileReader(FileReader):
-    """Reader for plain text (.txt) files."""
+    """Reader for plain text and text-based files (.txt, .md, .json, .yaml, etc.)."""
+    
+    # All text-based file extensions we support
+    TEXT_EXTENSIONS = {
+        '.txt', '.md', '.markdown',
+        '.js', '.jsx', '.ts', '.tsx',
+        '.java', '.cpp', '.c', '.h', '.hpp',
+        '.go', '.rs', '.rb', '.php',
+        '.json', '.yaml', '.yml', '.toml',
+        '.sh', '.bash', '.zsh', '.css', '.html'
+    }
     
     def can_read(self, file_path: str) -> bool:
-        """Check if this is a text file."""
-        return Path(file_path).suffix.lower() == ".txt"
+        """Check if this is a text-based file."""
+        return Path(file_path).suffix.lower() in self.TEXT_EXTENSIONS
     
     def extract_content(self, file_path: str) -> str:
         """Extract content from text file."""

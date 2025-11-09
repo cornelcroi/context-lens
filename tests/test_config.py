@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from src.mcp_knowledge_base.config import (
+from src.codelens.config import (
     Config,
     DatabaseConfig,
     EmbeddingConfig,
@@ -79,7 +79,12 @@ class TestProcessingConfig:
         assert config.max_file_size_mb == 10
         assert config.chunk_size == 1000
         assert config.chunk_overlap == 200
-        assert config.supported_extensions == [".py", ".txt"]
+        # Check that default extensions include common file types
+        assert ".py" in config.supported_extensions
+        assert ".txt" in config.supported_extensions
+        assert ".md" in config.supported_extensions
+        assert ".js" in config.supported_extensions
+        assert len(config.supported_extensions) > 10  # Should have 20+ types
     
     def test_validation_success(self):
         """Test successful validation."""
