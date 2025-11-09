@@ -11,7 +11,7 @@ from .config import Config, ConfigurationError
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments.
-    
+
     Returns:
         Parsed command-line arguments
     """
@@ -38,59 +38,51 @@ Examples:
 Environment Variables:
   Configuration can also be set via environment variables.
   See README.md for full list of supported variables.
-        """
+        """,
     )
-    
+
     # Configuration file
     parser.add_argument(
         "--config",
         type=str,
         metavar="PATH",
-        help="Path to YAML configuration file (default: config.yaml if exists, else env vars)"
+        help="Path to YAML configuration file (default: config.yaml if exists, else env vars)",
     )
-    
+
     # Server options
     parser.add_argument(
         "--log-level",
         type=str,
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help="Logging level (default: INFO or from config)"
+        help="Logging level (default: INFO or from config)",
     )
-    
+
     # Database options
     parser.add_argument(
         "--db-path",
         type=str,
         metavar="PATH",
-        help="Path to LanceDB database (default: ./knowledge_base.db or from config)"
+        help="Path to LanceDB database (default: ./knowledge_base.db or from config)",
     )
-    
+
     # Display options
-    parser.add_argument(
-        "--version",
-        action="version",
-        version="%(prog)s 0.1.0"
-    )
-    
-    parser.add_argument(
-        "--show-config",
-        action="store_true",
-        help="Display configuration and exit"
-    )
-    
+    parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
+
+    parser.add_argument("--show-config", action="store_true", help="Display configuration and exit")
+
     return parser.parse_args()
 
 
 def run() -> None:
     """CLI entry point for the MCP Knowledge Base Server.
-    
+
     This function:
     1. Parses command-line arguments
     2. Loads configuration from file or environment
     3. Applies CLI overrides to configuration
     4. Sets environment variables for server.py to use
     5. Delegates to FastMCP's app.run() for server execution
-    
+
     FastMCP handles:
     - stdio transport setup
     - Signal handling (SIGINT, SIGTERM)
@@ -100,30 +92,31 @@ def run() -> None:
     try:
         # Parse command-line arguments
         args = parse_arguments()
-        
+
         # Load configuration with CLI overrides
         config = Config.load(config_file=args.config)
-        
+
         # Apply CLI overrides to configuration
         if args.log_level:
             config.server.log_level = args.log_level
-        
+
         if args.db_path:
             config.database.path = args.db_path
-        
+
         # Validate configuration after overrides
         config.validate()
-        
+
         # Display configuration if requested
         if args.show_config:
             print("\n" + "=" * 80)
             print("MCP Knowledge Base Server Configuration")
             print("=" * 80)
             import json
+
             print(json.dumps(config.to_dict(), indent=2))
             print("=" * 80 + "\n")
             sys.exit(0)
-        
+
         # Set environment variables from configuration
         # These will be read by server.py's Config.from_env()
         os.environ["LOG_LEVEL"] = config.server.log_level
@@ -137,11 +130,11 @@ def run() -> None:
         os.environ["CHUNK_OVERLAP"] = str(config.processing.chunk_overlap)
         os.environ["SUPPORTED_EXTENSIONS"] = ",".join(config.processing.supported_extensions)
         os.environ["MCP_SERVER_NAME"] = config.server.name
-        
+
         # Run the FastMCP server
         # FastMCP handles stdio transport, signal handling, and lifecycle
         app.run()
-        
+
     except ConfigurationError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         sys.exit(1)

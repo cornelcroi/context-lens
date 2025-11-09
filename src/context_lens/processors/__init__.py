@@ -2,18 +2,18 @@
 
 from .file_readers import (
     FileReader,
-    PythonFileReader, 
+    PythonFileReader,
     TextFileReader,
     FileReaderFactory,
-    FileProcessingError
+    FileProcessingError,
 )
 from .content_extractor import ContentExtractor
 
 __all__ = [
     "FileReader",
     "PythonFileReader",
-    "TextFileReader", 
+    "TextFileReader",
     "FileReaderFactory",
     "FileProcessingError",
-    "ContentExtractor"
+    "ContentExtractor",
 ]
