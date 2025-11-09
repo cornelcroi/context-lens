@@ -53,13 +53,13 @@ jobs:
             ## Installation
             
             ```bash
-            pip install codelens==${{ steps.get_version.outputs.VERSION }}
+            pip install context-lens==${{ steps.get_version.outputs.VERSION }}
             ```
             
             Or use with uvx:
             
             ```bash
-            uvx codelens
+            uvx context-lens
             ```
           files: |
             dist/*
