@@ -17,7 +17,7 @@ Works with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients.
 
 No installation needed! Just configure your AI assistant to use CodeLens:
 
-### Claude Desktop (Recommended)
+### Claude Desktop
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
 
