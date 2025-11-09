@@ -13,6 +13,89 @@ CodeLens is a Model Context Protocol (MCP) server that gives AI assistants the a
 
 Works with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients.
 
+## Setup with Your LLM
+
+No installation needed! Just configure your AI assistant to use CodeLens:
+
+### Claude Desktop (Recommended)
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "codelens": {
+      "command": "uvx",
+      "args": ["codelens"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop and you're ready!
+
+### Kiro IDE
+
+Add to `.kiro/settings/mcp.json` in your workspace:
+
+```json
+{
+  "mcpServers": {
+    "codelens": {
+      "command": "uvx",
+      "args": ["codelens"],
+      "disabled": false,
+      "autoApprove": ["list_documents", "search_documents"]
+    }
+  }
+}
+```
+
+Reload MCP servers (Command Palette → "MCP: Reload Servers") and start using it!
+
+### Continue.dev
+
+Edit `~/.continue/config.json`:
+
+```json
+{
+  "mcpServers": [
+    {
+      "name": "codelens",
+      "command": "uvx",
+      "args": ["codelens"]
+    }
+  ]
+}
+```
+
+### Other MCP Clients
+
+For any MCP-compatible client, use:
+
+```json
+{
+  "command": "uvx",
+  "args": ["codelens"]
+}
+```
+
+### Custom Database Location (Optional)
+
+```json
+{
+  "mcpServers": {
+    "codelens": {
+      "command": "uvx",
+      "args": ["codelens"],
+      "env": {
+        "LANCE_DB_PATH": "./my_knowledge_base.db"
+      }
+    }
+  }
+}
+```
+
 ## What You Can Add
 
 CodeLens works with any text-based content:
@@ -75,15 +158,11 @@ CodeLens works with any text-based content:
 ```
 
 
-## Installation
+## Manual Installation (Optional)
 
-No manual installation needed! CodeLens is available on PyPI.
+Most users don't need to install anything - just configure your LLM client as shown above and `uvx` will handle everything automatically.
 
-Simply configure your LLM client to use `uvx codelens` (see [Setup](#setup-with-your-llm) below), and it will automatically download and run the latest version.
-
-### Alternative: Install Locally
-
-If you prefer to install it yourself:
+If you prefer to install locally:
 
 ```bash
 pip install codelens
@@ -92,7 +171,7 @@ pip install codelens
 Or install from source:
 
 ```bash
-git clone https://github.com/yourusername/codelens.git
+git clone https://github.com/cornelcroi/codelens.git
 cd codelens
 pip install -e .
 ```
@@ -347,115 +426,34 @@ Once you've added documents, here are powerful queries you can ask:
 - Too broad: "Explain everything"
 - Outside scope: Questions about code not in the knowledge base
 
-## Setup with Your LLM
+## Advanced Configuration
 
-### Claude Desktop
+### For Local Development (Not Yet Published)
 
-1. **Edit your Claude config** (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
+If you're developing CodeLens locally:
 
-   **For local development (not yet published):**
-   ```json
-   {
-     "mcpServers": {
-       "knowledge-base": {
-         "command": "codelens"
-       }
-     }
-   }
-   ```
-
-   **Once published to PyPI:**
-   ```json
-   {
-     "mcpServers": {
-       "knowledge-base": {
-         "command": "uvx",
-         "args": ["codelens"]
-       }
-     }
-   }
-   ```
-
-2. **Restart Claude Desktop**
-
-3. **Start using it:**
-   - "Add the file ./src/main.py to the knowledge base"
-   - "Search for authentication implementation"
-   - "What documents are in the knowledge base?"
-
-### Kiro IDE
-
-1. **Edit `.kiro/settings/mcp.json`** in your workspace:
-
-   **For local development (not yet published):**
-   ```json
-   {
-     "mcpServers": {
-       "knowledge-base": {
-         "command": "codelens",
-         "disabled": false,
-         "autoApprove": ["list_documents", "search_documents"]
-       }
-     }
-   }
-   ```
-
-   **Or use Python module directly:**
-   ```json
-   {
-     "mcpServers": {
-       "knowledge-base": {
-         "command": "python",
-         "args": ["-m", "codelens.main"],
-         "disabled": false,
-         "autoApprove": ["list_documents", "search_documents"]
-       }
-     }
-   }
-   ```
-
-   **Once published to PyPI:**
-   ```json
-   {
-     "mcpServers": {
-       "knowledge-base": {
-         "command": "uvx",
-         "args": ["codelens"],
-         "disabled": false,
-         "autoApprove": ["list_documents", "search_documents"]
-       }
-     }
-   }
-   ```
-
-2. **Reload MCP servers** (Command Palette → "MCP: Reload Servers")
-
-3. **Start using it** - Ask Kiro to search your documents!
-
-### Continue.dev
-
-Edit `~/.continue/config.json`:
-
+**Claude Desktop:**
 ```json
 {
-  "mcpServers": [
-    {
-      "name": "codelens",
-      "command": "uvx",
-      "args": ["codelens"]
+  "mcpServers": {
+    "codelens": {
+      "command": "codelens"
     }
-  ]
+  }
 }
 ```
 
-### Other MCP Clients
-
-For any MCP-compatible client:
-
+**Kiro IDE:**
 ```json
 {
-  "command": "uvx",
-  "args": ["codelens"]
+  "mcpServers": {
+    "codelens": {
+      "command": "python",
+      "args": ["-m", "codelens.main"],
+      "disabled": false,
+      "autoApprove": ["list_documents", "search_documents"]
+    }
+  }
 }
 ```
 
