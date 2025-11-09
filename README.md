@@ -15,12 +15,16 @@ Works with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients.
 
 ## Setup with Your LLM
 
-No installation needed! Just configure your AI assistant to use CodeLens:
+No installation needed! Just configure your AI assistant to use CodeLens. Choose your preferred method below:
 
-### Claude Desktop
+<details>
+<summary><b>📘 Claude Desktop</b></summary>
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
+**Config file location:**
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
+**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -32,12 +36,42 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 }
 ```
 
+**Alternative using npx:**
+```bash
+claude mcp add context-lens -- npx context-lens@latest
+```
+
 Restart Claude Desktop and you're ready!
 
-### Kiro IDE
+</details>
 
-Add to `.kiro/settings/mcp.json` in your workspace:
+<details>
+<summary><b>🎯 Cursor</b></summary>
 
+**Config file:** `.cursor/mcp.json` in your workspace
+
+**Configuration:**
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"]
+    }
+  }
+}
+```
+
+Open **Settings → MCP Servers** to confirm the connection and view available tools.
+
+</details>
+
+<details>
+<summary><b>⚡ Kiro IDE</b></summary>
+
+**Config file:** `.kiro/settings/mcp.json` in your workspace
+
+**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -51,12 +85,18 @@ Add to `.kiro/settings/mcp.json` in your workspace:
 }
 ```
 
-Reload MCP servers (Command Palette → "MCP: Reload Servers") and start using it!
+**Reload:** Command Palette → "MCP: Reload Servers"
 
-### Continue.dev
+The `autoApprove` setting allows read-only operations without confirmation prompts.
 
-Edit `~/.continue/config.json`:
+</details>
 
+<details>
+<summary><b>🔄 Continue.dev</b></summary>
+
+**Config file:** `~/.continue/config.json`
+
+**Configuration:**
 ```json
 {
   "mcpServers": [
@@ -69,36 +109,25 @@ Edit `~/.continue/config.json`:
 }
 ```
 
-### Cursor
+Restart Continue.dev to apply changes.
 
-Add to `.cursor/mcp.json` in your workspace:
+</details>
 
-```json
-{
-  "mcpServers": {
-    "context-lens": {
-      "command": "uvx",
-      "args": ["context-lens"]
-    }
-  }
-}
-```
+<details>
+<summary><b>🤖 OpenAI Codex</b></summary>
 
-Once configured, open the MCP Servers page in Cursor Settings to confirm the server is connected and view available tools.
-
-### Alternative Installation Methods
-
-**Claude Desktop using npx:**
-```bash
-claude mcp add context-lens -- npx context-lens@latest
-```
-
-**OpenAI Codex:**
+**Installation:**
 ```bash
 codex mcp add context-lens -- npx @context-lens@latest
 ```
 
-**Or using node with the built file:**
+</details>
+
+<details>
+<summary><b>🔧 Advanced: Node.js Direct</b></summary>
+
+For custom setups or local development:
+
 ```json
 {
   "mcpServers": {
@@ -110,9 +139,12 @@ codex mcp add context-lens -- npx @context-lens@latest
 }
 ```
 
-### Other MCP Clients
+</details>
 
-For any MCP-compatible client, use:
+<details>
+<summary><b>🌐 Other MCP Clients</b></summary>
+
+For any MCP-compatible client, use the standard configuration:
 
 ```json
 {
