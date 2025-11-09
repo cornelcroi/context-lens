@@ -1,5 +1,4 @@
-# Context Lens
-
+<h2 align="center">Context Lens</h2>
 <p align="center">Give your LLM glasses to understand meaning, not just read words</p>
 
 ## What's the Context Lens ❓
