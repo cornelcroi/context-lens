@@ -15,16 +15,14 @@ Works with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients.
 
 ## Setup with Your LLM
 
-No installation needed! Just configure your AI assistant to use CodeLens. Choose your preferred method below:
+No installation needed! Just configure your AI assistant to use CodeLens:
 
-<details>
-<summary><b>📘 Claude Desktop</b></summary>
+### 📘 Claude Desktop
 
 **Config file location:**
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -36,21 +34,19 @@ No installation needed! Just configure your AI assistant to use CodeLens. Choose
 }
 ```
 
-**Alternative using npx:**
+**Alternative using CLI:**
 ```bash
 claude mcp add context-lens -- npx context-lens@latest
 ```
 
 Restart Claude Desktop and you're ready!
 
-</details>
+---
 
-<details>
-<summary><b>🎯 Cursor</b></summary>
+### 🎯 Cursor
 
 **Config file:** `.cursor/mcp.json` in your workspace
 
-**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -64,14 +60,12 @@ Restart Claude Desktop and you're ready!
 
 Open **Settings → MCP Servers** to confirm the connection and view available tools.
 
-</details>
+---
 
-<details>
-<summary><b>⚡ Kiro IDE</b></summary>
+### ⚡ Kiro IDE
 
 **Config file:** `.kiro/settings/mcp.json` in your workspace
 
-**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -89,14 +83,12 @@ Open **Settings → MCP Servers** to confirm the connection and view available t
 
 The `autoApprove` setting allows read-only operations without confirmation prompts.
 
-</details>
+---
 
-<details>
-<summary><b>🔄 Continue.dev</b></summary>
+### 🔄 Continue.dev
 
 **Config file:** `~/.continue/config.json`
 
-**Configuration:**
 ```json
 {
   "mcpServers": [
@@ -111,20 +103,17 @@ The `autoApprove` setting allows read-only operations without confirmation promp
 
 Restart Continue.dev to apply changes.
 
-</details>
+---
 
-<details>
-<summary><b>🤖 OpenAI Codex</b></summary>
+### 🤖 OpenAI Codex
 
-**Installation:**
 ```bash
 codex mcp add context-lens -- npx @context-lens@latest
 ```
 
-</details>
+---
 
-<details>
-<summary><b>🔧 Advanced: Node.js Direct</b></summary>
+### 🔧 Advanced: Node.js Direct
 
 For custom setups or local development:
 
@@ -139,10 +128,9 @@ For custom setups or local development:
 }
 ```
 
-</details>
+---
 
-<details>
-<summary><b>🌐 Other MCP Clients</b></summary>
+### 🌐 Other MCP Clients
 
 For any MCP-compatible client, use the standard configuration:
 
@@ -152,6 +140,8 @@ For any MCP-compatible client, use the standard configuration:
   "args": ["context-lens"]
 }
 ```
+
+---
 
 ### Custom Database Location (Optional)
 
