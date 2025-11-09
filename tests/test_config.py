@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from src.codelens.config import (
+from context_lens.config import (
     Config,
     DatabaseConfig,
     EmbeddingConfig,

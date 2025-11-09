@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from src.codelens.utils.github_handler import (
+from context_lens.utils.github_handler import (
     is_github_url,
     parse_github_url,
     GitHubHandlerError,
@@ -115,7 +115,7 @@ class TestGitHubFileFiltering:
     
     def test_ignore_patterns_defined(self):
         """Test that common ignore patterns are defined."""
-        from src.codelens.utils.github_handler import get_repository_files
+        from context_lens.utils.github_handler import get_repository_files
         import inspect
         
         # Get the source code of the function

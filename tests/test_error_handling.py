@@ -1,7 +1,7 @@
 """Tests for comprehensive error handling module."""
 
 import pytest
-from src.codelens.errors import (
+from context_lens.errors import (
     ErrorCategory,
     KnowledgeBaseError,
     FileValidationError,
