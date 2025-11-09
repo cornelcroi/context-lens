@@ -1,12 +1,12 @@
 """Main entry point for the MCP Knowledge Base Server with CLI argument parsing."""
 
-import sys
-import os
 import argparse
+import os
+import sys
 from typing import Optional
 
-from .server import app
 from .config import Config, ConfigurationError
+from .server import app
 
 
 def parse_arguments() -> argparse.Namespace:

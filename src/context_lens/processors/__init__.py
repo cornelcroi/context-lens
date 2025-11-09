@@ -1,13 +1,13 @@
 """Document processing components for the MCP Knowledge Base Server."""
 
+from .content_extractor import ContentExtractor
 from .file_readers import (
+    FileProcessingError,
     FileReader,
+    FileReaderFactory,
     PythonFileReader,
     TextFileReader,
-    FileReaderFactory,
-    FileProcessingError,
 )
-from .content_extractor import ContentExtractor
 
 __all__ = [
     "FileReader",

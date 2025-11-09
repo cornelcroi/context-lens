@@ -1,18 +1,19 @@
 """Tests for comprehensive error handling module."""
 
 import pytest
+
 from context_lens.errors import (
-    ErrorCategory,
-    KnowledgeBaseError,
-    FileValidationError,
-    ParameterValidationError,
     DatabaseError,
     EmbeddingError,
+    ErrorCategory,
+    FileValidationError,
+    KnowledgeBaseError,
+    ParameterValidationError,
     create_error_response,
     validate_file_path,
-    validate_query_parameter,
     validate_limit_parameter,
     validate_offset_parameter,
+    validate_query_parameter,
 )
 
 

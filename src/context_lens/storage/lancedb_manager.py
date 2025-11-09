@@ -2,20 +2,19 @@
 
 import asyncio
 import logging
+import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Dict, Any
-import uuid
+from typing import Any, Dict, List, Optional
 
 import lancedb
 import pandas as pd
 import pyarrow as pa
 from lancedb.table import Table
 
-from ..models.data_models import DocumentMetadata, DocumentChunk, SearchResult, ErrorResponse
-from ..models.schemas import get_documents_schema, get_chunks_schema
 from ..config import DatabaseConfig
-
+from ..models.data_models import DocumentChunk, DocumentMetadata, ErrorResponse, SearchResult
+from ..models.schemas import get_chunks_schema, get_documents_schema
 
 logger = logging.getLogger(__name__)
 

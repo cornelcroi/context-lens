@@ -7,18 +7,19 @@ These tests verify end-to-end workflows including:
 - MCP tool integration with FastMCP framework
 """
 
-import pytest
 import asyncio
 import tempfile
 from pathlib import Path
 
+import pytest
+
+from context_lens.server import add_document as add_document_tool
+from context_lens.server import clear_knowledge_base as clear_knowledge_base_tool
 from context_lens.server import (
-    add_document as add_document_tool,
-    list_documents as list_documents_tool,
-    search_documents as search_documents_tool,
-    clear_knowledge_base as clear_knowledge_base_tool,
     get_document_service,
 )
+from context_lens.server import list_documents as list_documents_tool
+from context_lens.server import search_documents as search_documents_tool
 
 # Note: initialize_server and cleanup_server have been removed
 # The server now uses lazy initialization - resources are initialized

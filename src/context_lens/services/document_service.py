@@ -4,29 +4,28 @@ import logging
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
-from ..models.data_models import (
-    DocumentMetadata,
-    DocumentChunk,
-    SearchResult,
-    ClearResult,
-    ErrorResponse,
-)
 from ..config import Config
-from ..storage.lancedb_manager import LanceDBManager, VectorSearchResult
-from ..services.embedding_service import EmbeddingService
+from ..models.data_models import (
+    ClearResult,
+    DocumentChunk,
+    DocumentMetadata,
+    ErrorResponse,
+    SearchResult,
+)
 from ..processors.content_extractor import ContentExtractor
 from ..processors.file_readers import FileProcessingError
+from ..services.embedding_service import EmbeddingService
+from ..storage.lancedb_manager import LanceDBManager, VectorSearchResult
 from ..utils.github_handler import (
-    is_github_url,
-    parse_github_url,
+    GitHubHandlerError,
+    cleanup_repository,
     clone_repository,
     get_repository_files,
-    cleanup_repository,
-    GitHubHandlerError,
+    is_github_url,
+    parse_github_url,
 )
-
 
 logger = logging.getLogger(__name__)
 

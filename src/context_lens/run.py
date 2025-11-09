@@ -1,6 +1,7 @@
 """Entry point for running the MCP server with stdio transport."""
 
 import asyncio
+
 from .server import app, initialize_server
 
 if __name__ == "__main__":

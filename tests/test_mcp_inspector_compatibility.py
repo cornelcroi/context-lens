@@ -9,11 +9,12 @@ This test suite validates:
 """
 
 import asyncio
-import time
-import pytest
-from pathlib import Path
-import sys
 import os
+import sys
+import time
+from pathlib import Path
+
+import pytest
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))

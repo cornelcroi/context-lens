@@ -1,9 +1,8 @@
 """Centralized error handling and structured error responses for the MCP Knowledge Base Server."""
 
 import logging
-from typing import Optional, Dict, Any
 from enum import Enum
-
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 

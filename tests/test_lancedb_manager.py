@@ -1,13 +1,14 @@
 """Unit tests for LanceDB manager."""
 
-import pytest
 import asyncio
 from datetime import datetime
 from pathlib import Path
 
-from context_lens.storage.lancedb_manager import LanceDBManager, VectorSearchResult
-from context_lens.models.data_models import DocumentMetadata, DocumentChunk
+import pytest
+
 from context_lens.config import DatabaseConfig
+from context_lens.models.data_models import DocumentChunk, DocumentMetadata
+from context_lens.storage.lancedb_manager import LanceDBManager, VectorSearchResult
 
 
 class TestLanceDBManager:

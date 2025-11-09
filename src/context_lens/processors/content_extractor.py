@@ -1,13 +1,13 @@
 """Content extraction and chunking for document processing."""
 
+import logging
 import re
 import uuid
-import logging
-from typing import List, Tuple
 from pathlib import Path
+from typing import List, Tuple
 
 from ..models.data_models import DocumentChunk, DocumentMetadata
-from .file_readers import FileReaderFactory, FileProcessingError
+from .file_readers import FileProcessingError, FileReaderFactory
 
 logger = logging.getLogger(__name__)
 

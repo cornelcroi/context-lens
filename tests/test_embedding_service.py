@@ -1,11 +1,12 @@
 """Tests for the EmbeddingService class."""
 
-import pytest
 import asyncio
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from context_lens.services.embedding_service import EmbeddingService
+import pytest
+
 from context_lens.config import EmbeddingConfig, ProcessingConfig
+from context_lens.services.embedding_service import EmbeddingService
 
 
 class TestEmbeddingService:

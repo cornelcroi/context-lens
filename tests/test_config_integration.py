@@ -3,6 +3,7 @@
 import os
 import tempfile
 from pathlib import Path
+
 import pytest
 
 from context_lens.config import Config

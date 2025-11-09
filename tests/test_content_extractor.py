@@ -1,11 +1,12 @@
 """Unit tests for ContentExtractor."""
 
-import pytest
 from pathlib import Path
 
-from context_lens.processors.content_extractor import ContentExtractor
+import pytest
+
+from context_lens.models.data_models import DocumentChunk, DocumentMetadata
 from context_lens.processors import FileProcessingError
-from context_lens.models.data_models import DocumentMetadata, DocumentChunk
+from context_lens.processors.content_extractor import ContentExtractor
 
 
 class TestContentExtractor:

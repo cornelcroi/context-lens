@@ -1,11 +1,13 @@
 """Tests for GitHub repository handling."""
 
-import pytest
 from pathlib import Path
+
+import pytest
+
 from context_lens.utils.github_handler import (
+    GitHubHandlerError,
     is_github_url,
     parse_github_url,
-    GitHubHandlerError,
 )
 
 
@@ -115,8 +117,9 @@ class TestGitHubFileFiltering:
 
     def test_ignore_patterns_defined(self):
         """Test that common ignore patterns are defined."""
-        from context_lens.utils.github_handler import get_repository_files
         import inspect
+
+        from context_lens.utils.github_handler import get_repository_files
 
         # Get the source code of the function
         source = inspect.getsource(get_repository_files)

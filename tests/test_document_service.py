@@ -1,11 +1,11 @@
 """Tests for the DocumentService class."""
 
-import pytest
 import asyncio
 import tempfile
 from pathlib import Path
 
-from context_lens.services.document_service import DocumentService
+import pytest
+
 from context_lens.config import (
     Config,
     DatabaseConfig,
@@ -13,6 +13,7 @@ from context_lens.config import (
     ProcessingConfig,
     ServerConfig,
 )
+from context_lens.services.document_service import DocumentService
 
 
 class TestDocumentService:

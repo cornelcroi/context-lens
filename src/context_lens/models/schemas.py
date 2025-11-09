@@ -2,7 +2,6 @@
 
 import pyarrow as pa
 
-
 # Documents table schema
 documents_schema = pa.schema(
     [

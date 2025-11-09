@@ -1,16 +1,17 @@
 """Tests for file processing components."""
 
-import pytest
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from context_lens.processors import (
+    ContentExtractor,
+    FileProcessingError,
     FileReader,
+    FileReaderFactory,
     PythonFileReader,
     TextFileReader,
-    FileReaderFactory,
-    FileProcessingError,
-    ContentExtractor,
 )
 
 

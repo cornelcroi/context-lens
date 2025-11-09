@@ -1,9 +1,10 @@
 """Pytest configuration and fixtures for CodeLens tests."""
 
-import pytest
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
+
+import pytest
 
 from context_lens.config import (
     Config,

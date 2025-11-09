@@ -1,14 +1,14 @@
 """Embedding service for generating vector embeddings using sentence-transformers."""
 
-import os
 import logging
-from typing import List, Optional, Tuple
+import os
 import re
 from pathlib import Path
+from typing import List, Optional, Tuple
 
 try:
-    from sentence_transformers import SentenceTransformer
     import torch
+    from sentence_transformers import SentenceTransformer
 except ImportError as e:
     raise ImportError(
         "sentence-transformers and torch are required. "
@@ -16,7 +16,6 @@ except ImportError as e:
     ) from e
 
 from ..config import EmbeddingConfig, ProcessingConfig
-
 
 logger = logging.getLogger(__name__)
 

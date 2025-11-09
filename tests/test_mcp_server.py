@@ -3,8 +3,8 @@
 import pytest
 from fastmcp import FastMCP
 
-from context_lens.server import mcp, app
 from context_lens.config import Config
+from context_lens.server import app, mcp
 
 
 class TestMCPServer:
@@ -22,15 +22,15 @@ class TestMCPServer:
     def test_tools_are_registered(self):
         """Test that all required tools are registered."""
         # Import the tool functions to verify they exist as FunctionTool objects
-        from context_lens.server import (
-            add_document,
-            list_documents,
-            search_documents,
-            clear_knowledge_base,
-        )
-
         # Verify they are FunctionTool objects (wrapped by FastMCP)
         from fastmcp.tools import FunctionTool
+
+        from context_lens.server import (
+            add_document,
+            clear_knowledge_base,
+            list_documents,
+            search_documents,
+        )
 
         assert isinstance(add_document, FunctionTool)
         assert isinstance(list_documents, FunctionTool)
@@ -47,9 +47,9 @@ class TestMCPServer:
         """Test that tools have proper descriptions."""
         from context_lens.server import (
             add_document,
+            clear_knowledge_base,
             list_documents,
             search_documents,
-            clear_knowledge_base,
         )
 
         # Verify tools have descriptions
@@ -81,13 +81,13 @@ class TestMCPServerIntegration:
         # This test verifies that all imports work correctly
         try:
             from context_lens.server import (
-                mcp,
-                app,
-                get_document_service,
                 add_document,
-                list_documents,
-                search_documents,
+                app,
                 clear_knowledge_base,
+                get_document_service,
+                list_documents,
+                mcp,
+                search_documents,
             )
 
             # If we get here, imports worked

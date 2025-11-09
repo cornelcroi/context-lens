@@ -4,24 +4,24 @@ import asyncio
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from fastmcp import FastMCP
 
-from .services.document_service import DocumentService
 from .config import Config
 from .errors import (
-    validate_file_path,
-    validate_query_parameter,
-    validate_limit_parameter,
-    validate_offset_parameter,
+    KnowledgeBaseError,
+    ParameterValidationError,
     create_error_response,
+    log_operation_failure,
     log_operation_start,
     log_operation_success,
-    log_operation_failure,
-    ParameterValidationError,
-    KnowledgeBaseError,
+    validate_file_path,
+    validate_limit_parameter,
+    validate_offset_parameter,
+    validate_query_parameter,
 )
+from .services.document_service import DocumentService
 
 
 def setup_file_logging(log_level: str = "INFO") -> None:
