@@ -7,17 +7,17 @@ These tests verify end-to-end workflows including:
 - MCP tool integration with FastMCP framework
 """
 
-import asyncio
-import tempfile
-from pathlib import Path
-
+from context_lens.config import (
+    Config,
+    DatabaseConfig,
+    EmbeddingConfig,
+    ProcessingConfig,
+    ServerConfig,
+)
 import pytest
 
 from context_lens.server import add_document as add_document_tool
 from context_lens.server import clear_knowledge_base as clear_knowledge_base_tool
-from context_lens.server import (
-    get_document_service,
-)
 from context_lens.server import list_documents as list_documents_tool
 from context_lens.server import search_documents as search_documents_tool
 
@@ -45,15 +45,6 @@ async def search_documents(query: str, limit=10):
 async def clear_knowledge_base():
     """Call the clear_knowledge_base tool."""
     return await clear_knowledge_base_tool.fn()
-
-
-from context_lens.config import (
-    Config,
-    DatabaseConfig,
-    EmbeddingConfig,
-    ProcessingConfig,
-    ServerConfig,
-)
 
 
 @pytest.fixture
@@ -89,16 +80,16 @@ def sample_documents(temp_dir):
 def binary_search(arr, target):
     """
     Perform binary search on a sorted array.
-    
+
     Args:
         arr: Sorted array to search
         target: Value to find
-        
+
     Returns:
         Index of target or -1 if not found
     """
     left, right = 0, len(arr) - 1
-    
+
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] == target:
@@ -107,43 +98,43 @@ def binary_search(arr, target):
             left = mid + 1
         else:
             right = mid - 1
-    
+
     return -1
 
 
 def quicksort(arr):
     """
     Sort an array using quicksort algorithm.
-    
+
     Args:
         arr: Array to sort
-        
+
     Returns:
         Sorted array
     """
     if len(arr) <= 1:
         return arr
-    
+
     pivot = arr[len(arr) // 2]
     left = [x for x in arr if x < pivot]
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
-    
+
     return quicksort(left) + middle + quicksort(right)
 
 
 class Graph:
     """Graph data structure with basic operations."""
-    
+
     def __init__(self):
         """Initialize an empty graph."""
         self.adjacency_list = {}
-    
+
     def add_vertex(self, vertex):
         """Add a vertex to the graph."""
         if vertex not in self.adjacency_list:
             self.adjacency_list[vertex] = []
-    
+
     def add_edge(self, v1, v2):
         """Add an edge between two vertices."""
         self.add_vertex(v1)
@@ -189,27 +180,27 @@ Applications:
 
 class Stack:
     """Stack implementation using a list."""
-    
+
     def __init__(self):
         """Initialize an empty stack."""
         self.items = []
-    
+
     def push(self, item):
         """Push an item onto the stack."""
         self.items.append(item)
-    
+
     def pop(self):
         """Pop an item from the stack."""
         if not self.is_empty():
             return self.items.pop()
         raise IndexError("Pop from empty stack")
-    
+
     def peek(self):
         """Return the top item without removing it."""
         if not self.is_empty():
             return self.items[-1]
         raise IndexError("Peek from empty stack")
-    
+
     def is_empty(self):
         """Check if the stack is empty."""
         return len(self.items) == 0
@@ -217,21 +208,21 @@ class Stack:
 
 class Queue:
     """Queue implementation using a list."""
-    
+
     def __init__(self):
         """Initialize an empty queue."""
         self.items = []
-    
+
     def enqueue(self, item):
         """Add an item to the rear of the queue."""
         self.items.insert(0, item)
-    
+
     def dequeue(self):
         """Remove and return the front item."""
         if not self.is_empty():
             return self.items.pop()
         raise IndexError("Dequeue from empty queue")
-    
+
     def is_empty(self):
         """Check if the queue is empty."""
         return len(self.items) == 0
@@ -311,7 +302,7 @@ class TestEndToEndWorkflow:
             # Add document first time
             result1 = await add_document(str(doc_file))
             assert result1["success"] is True
-            doc_id_1 = result1["document"]["id"]
+            result1["document"]["id"]
 
             # Verify one document exists
             list_result = await list_documents()

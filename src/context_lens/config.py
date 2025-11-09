@@ -12,8 +12,6 @@ logger = logging.getLogger(__name__)
 class ConfigurationError(Exception):
     """Exception raised for configuration errors."""
 
-    pass
-
 
 @dataclass
 class DatabaseConfig:
@@ -130,7 +128,8 @@ class ProcessingConfig:
 
         if self.chunk_overlap >= self.chunk_size:
             raise ConfigurationError(
-                f"Chunk overlap ({self.chunk_overlap}) must be less than chunk size ({self.chunk_size})"
+                f"Chunk overlap ({self.chunk_overlap}) must be less than "
+                f"chunk size ({self.chunk_size})"
             )
 
         if not self.supported_extensions:
@@ -157,7 +156,8 @@ class ServerConfig:
         valid_log_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         if self.log_level.upper() not in valid_log_levels:
             raise ConfigurationError(
-                f"Invalid log level '{self.log_level}'. Must be one of: {', '.join(valid_log_levels)}"
+                f"Invalid log level '{self.log_level}'. "
+                f"Must be one of: {', '.join(valid_log_levels)}"
             )
 
         # Normalize log level to uppercase
@@ -372,7 +372,9 @@ class Config:
 
     @classmethod
     def load(cls, config_file: Optional[str] = None) -> "Config":
-        """Load configuration with fallback priority: specified file -> default config.yaml -> env -> defaults.
+        """Load configuration with fallback priority.
+
+        Priority: specified file -> default config.yaml -> env -> defaults.
 
         Args:
             config_file: Optional path to configuration file

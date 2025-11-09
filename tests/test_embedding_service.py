@@ -1,8 +1,5 @@
 """Tests for the EmbeddingService class."""
 
-import asyncio
-from unittest.mock import MagicMock, patch
-
 import pytest
 
 from context_lens.config import EmbeddingConfig, ProcessingConfig
@@ -77,10 +74,10 @@ def function2():
 
 class TestClass:
     """A test class."""
-    
+
     def method1(self):
         return "method1"
-        
+
     def method2(self):
         return "method2"
 '''

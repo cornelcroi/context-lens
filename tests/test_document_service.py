@@ -1,9 +1,5 @@
 """Tests for the DocumentService class."""
 
-import asyncio
-import tempfile
-from pathlib import Path
-
 import pytest
 
 from context_lens.config import (
@@ -37,11 +33,11 @@ class TestDocumentService:
 
 class Calculator:
     """A simple calculator class."""
-    
+
     def add(self, a, b):
         """Add two numbers."""
         return a + b
-    
+
     def multiply(self, a, b):
         """Multiply two numbers."""
         return a * b

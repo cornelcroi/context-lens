@@ -1,10 +1,9 @@
 """Embedding service for generating vector embeddings using sentence-transformers."""
 
 import logging
-import os
 import re
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 try:
     import torch

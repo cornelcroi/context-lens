@@ -15,8 +15,6 @@ logger = logging.getLogger(__name__)
 class GitHubHandlerError(Exception):
     """Exception raised for GitHub handling errors."""
 
-    pass
-
 
 def is_github_url(url: str) -> bool:
     """Check if the given string is a GitHub URL.

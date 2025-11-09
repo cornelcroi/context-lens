@@ -3,7 +3,6 @@
 import argparse
 import os
 import sys
-from typing import Optional
 
 from .config import Config, ConfigurationError
 from .server import app

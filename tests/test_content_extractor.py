@@ -42,7 +42,7 @@ def function2():
 
 class TestClass:
     """Test class."""
-    
+
     def method1(self):
         return "method1"
 '''
@@ -304,16 +304,16 @@ def another_small_function():
         py_file = temp_dir / "classes.py"
         content = '''class FirstClass:
     """First class."""
-    
+
     def method1(self):
         return "method1"
-    
+
     def method2(self):
         return "method2"
 
 class SecondClass:
     """Second class."""
-    
+
     def method3(self):
         return "method3"
 '''
@@ -342,7 +342,7 @@ def function():
 
 class MyClass:
     """Class docstring."""
-    
+
     def __init__(self):
         self.value = 0
 '''

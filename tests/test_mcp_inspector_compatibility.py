@@ -8,6 +8,7 @@ This test suite validates:
 - Thread-safe initialization
 """
 
+from context_lens import server
 import asyncio
 import os
 import sys
@@ -18,9 +19,6 @@ import pytest
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from context_lens import server
-from context_lens.config import Config
 
 
 class TestMCPInspectorCompatibility:

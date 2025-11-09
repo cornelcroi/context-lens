@@ -1,7 +1,5 @@
 """Tests for GitHub repository handling."""
 
-from pathlib import Path
-
 import pytest
 
 from context_lens.utils.github_handler import (
@@ -136,4 +134,3 @@ class TestGitHubFileFiltering:
         """Test that only supported extensions are included."""
         # This would require actual file system or mocking
         # Placeholder for integration test
-        pass

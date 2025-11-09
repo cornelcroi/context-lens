@@ -1,14 +1,10 @@
 """Tests for file processing components."""
 
-import tempfile
-from pathlib import Path
-
 import pytest
 
 from context_lens.processors import (
     ContentExtractor,
     FileProcessingError,
-    FileReader,
     FileReaderFactory,
     PythonFileReader,
     TextFileReader,
@@ -184,7 +180,7 @@ def function2():
 
 class TestClass:
     """Test class."""
-    
+
     def method(self):
         pass
 '''

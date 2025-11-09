@@ -1,23 +1,17 @@
 """Document service layer orchestrating document operations for the MCP Knowledge Base Server."""
 
 import logging
-import uuid
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from ..config import Config
 from ..models.data_models import (
-    ClearResult,
-    DocumentChunk,
-    DocumentMetadata,
-    ErrorResponse,
     SearchResult,
 )
 from ..processors.content_extractor import ContentExtractor
 from ..processors.file_readers import FileProcessingError
 from ..services.embedding_service import EmbeddingService
-from ..storage.lancedb_manager import LanceDBManager, VectorSearchResult
+from ..storage.lancedb_manager import LanceDBManager
 from ..utils.github_handler import (
     GitHubHandlerError,
     cleanup_repository,

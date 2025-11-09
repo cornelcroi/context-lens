@@ -6,18 +6,14 @@ import logging
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 import chardet
 
 from ..errors import (
     ErrorCategory,
     KnowledgeBaseError,
-    log_operation_failure,
-    log_operation_start,
-    log_operation_success,
 )
-from ..models.data_models import ErrorResponse
 
 logger = logging.getLogger(__name__)
 
@@ -83,12 +79,10 @@ class FileReader(ABC):
     @abstractmethod
     def can_read(self, file_path: str) -> bool:
         """Check if this reader can handle the given file type."""
-        pass
 
     @abstractmethod
     def extract_content(self, file_path: str) -> str:
         """Extract content from the file."""
-        pass
 
     def validate_file(self, file_path: str) -> None:
         """Validate file before processing.
@@ -329,7 +323,7 @@ class PythonFileReader(FileReader):
             # Future enhancement: could extract docstrings, comments separately
             return raw_content
 
-        except SyntaxError as e:
+        except SyntaxError:
             # If syntax is invalid, still return content but log the issue
             # This allows processing of incomplete or malformed Python files
             return raw_content

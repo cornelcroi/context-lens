@@ -1,13 +1,18 @@
-# CodeLens
+# Context Lens
 
-### *Give your LLM glasses to understand meaning, not just read words*
+<p align="center">Give your LLM glasses to understand meaning, not just read words</p>
+
+## What's the Context Lens ❓
+
+Context Lens is semantic search for AI assistants. Drop in any knowledge source - documentation, repositories, notes, or local files - and your AI can instantly understand and answer questions about it. No configuration, no build step - it just works.
+
+---
 
 [![Tests](https://github.com/cornelcroi/codelens/workflows/Tests/badge.svg)](https://github.com/cornelcroi/codelens/actions)
 [![PyPI version](https://badge.fury.io/py/context-lens.svg)](https://badge.fury.io/py/context-lens)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**CodeLens is semantic search for AI assistants. Drop in any knowledge source - documentation, repositories, notes, or local files - and your AI can instantly understand and answer questions about it. No configuration, no build step - it just works.**
 
 CodeLens is a Model Context Protocol (MCP) server that gives AI assistants the ability to semantically search and understand any content using vector embeddings and LanceDB.
 
