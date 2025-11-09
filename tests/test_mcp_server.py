@@ -49,7 +49,7 @@ class TestMCPServer:
         assert "Lists all documents" in list_documents.description
         
         assert search_documents.description is not None
-        assert "Search documents" in search_documents.description
+        assert "Searches documents" in search_documents.description
         
         assert clear_knowledge_base.description is not None
         assert "Clear all documents" in clear_knowledge_base.description
