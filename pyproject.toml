@@ -3,11 +3,25 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "codelens"
+name = "context-lens"
 version = "0.1.0"
 description = "CodeLens - Give your LLM glasses to understand meaning, not just read words. Semantic search for AI assistants."
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "semantic-search",
+    "vector-database",
+    "ai-assistant",
+    "llm",
+    "embedding",
+    "rag",
+    "knowledge-base",
+    "claude",
+    "lancedb"
+]
 authors = [
     {name = "Corneliu Croitoru", email = "cornel.croitoru@gmail.com"}
 ]
@@ -16,9 +30,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
@@ -53,12 +64,12 @@ dev = [
 # - Module entry point: python -m codelens.server (for MCP Inspector)
 # - Direct import: from codelens.server import app (for programmatic use)
 [project.scripts]
-codelens = "codelens.main:run"
+context-lens = "context_lens.main:run"
 
 [project.urls]
-Homepage = "https://github.com/example/codelens"
-Repository = "https://github.com/example/codelens"
-Issues = "https://github.com/example/codelens/issues"
+Homepage = "https://github.com/cornelcroi/codelens"
+Repository = "https://github.com/cornelcroi/codelens"
+Issues = "https://github.com/cornelcroi/codelens/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

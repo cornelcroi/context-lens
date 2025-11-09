@@ -2,8 +2,8 @@
 
 ### *Give your LLM glasses to understand meaning, not just read words*
 
-[![Tests](https://github.com/yourusername/codelens/workflows/Tests/badge.svg)](https://github.com/yourusername/codelens/actions)
-[![PyPI version](https://badge.fury.io/py/codelens.svg)](https://badge.fury.io/py/codelens)
+[![Tests](https://github.com/cornelcroi/codelens/workflows/Tests/badge.svg)](https://github.com/cornelcroi/codelens/actions)
+[![PyPI version](https://badge.fury.io/py/context-lens.svg)](https://badge.fury.io/py/context-lens)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -24,9 +24,9 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 ```json
 {
   "mcpServers": {
-    "codelens": {
+    "context-lens": {
       "command": "uvx",
-      "args": ["codelens"]
+      "args": ["context-lens"]
     }
   }
 }
@@ -41,9 +41,9 @@ Add to `.kiro/settings/mcp.json` in your workspace:
 ```json
 {
   "mcpServers": {
-    "codelens": {
+    "context-lens": {
       "command": "uvx",
-      "args": ["codelens"],
+      "args": ["context-lens"],
       "disabled": false,
       "autoApprove": ["list_documents", "search_documents"]
     }
@@ -61,9 +61,9 @@ Edit `~/.continue/config.json`:
 {
   "mcpServers": [
     {
-      "name": "codelens",
+      "name": "context-lens",
       "command": "uvx",
-      "args": ["codelens"]
+      "args": ["context-lens"]
     }
   ]
 }
@@ -76,7 +76,7 @@ For any MCP-compatible client, use:
 ```json
 {
   "command": "uvx",
-  "args": ["codelens"]
+  "args": ["context-lens"]
 }
 ```
 
@@ -85,9 +85,9 @@ For any MCP-compatible client, use:
 ```json
 {
   "mcpServers": {
-    "codelens": {
+    "context-lens": {
       "command": "uvx",
-      "args": ["codelens"],
+      "args": ["context-lens"],
       "env": {
         "LANCE_DB_PATH": "./my_knowledge_base.db"
       }
@@ -165,7 +165,7 @@ Most users don't need to install anything - just configure your LLM client as sh
 If you prefer to install locally:
 
 ```bash
-pip install codelens
+pip install context-lens
 ```
 
 Or install from source:
@@ -436,8 +436,8 @@ If you're developing CodeLens locally:
 ```json
 {
   "mcpServers": {
-    "codelens": {
-      "command": "codelens"
+    "context-lens": {
+      "command": "context-lens"
     }
   }
 }
@@ -447,9 +447,9 @@ If you're developing CodeLens locally:
 ```json
 {
   "mcpServers": {
-    "codelens": {
+    "context-lens": {
       "command": "python",
-      "args": ["-m", "codelens.main"],
+      "args": ["-m", "context_lens.main"],
       "disabled": false,
       "autoApprove": ["list_documents", "search_documents"]
     }
@@ -464,7 +464,7 @@ MCP Inspector is a web-based tool for testing MCP servers during development.
 **Quick Start:**
 ```bash
 # Test with MCP Inspector
-DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector python -m codelens.server
+DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector python -m context_lens.server
 ```
 
 **What happens:**
@@ -476,7 +476,7 @@ DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector python -m codelen
 **Testing workflow:**
 - Use Inspector's UI to call tools with different parameters
 - View request/response JSON in real-time
-- Check logs in `./logs/codelens.log` for detailed info
+- Check logs in `./logs/context-lens.log` for detailed info
 - Test error handling with invalid inputs
 
 **Note:** The server uses lazy initialization, so startup is fast but the first tool call will take longer as it loads the embedding model. This is expected behavior and only happens once per session.
@@ -565,10 +565,10 @@ Why: Understands meaning, not just words
 **Server not starting?**
 ```bash
 # Check installation
-codelens --version
+context-lens --version
 
 # View detailed logs
-tail -f logs/codelens.log
+tail -f logs/context-lens.log
 
 # Check for errors
 tail -f logs/errors.log
@@ -583,13 +583,13 @@ The server uses lazy initialization - it starts quickly but loads the embedding 
 **MCP Inspector not connecting?**
 ```bash
 # Make sure you're using the correct command
-npx @modelcontextprotocol/inspector python -m codelens.server
+npx @modelcontextprotocol/inspector python -m context_lens.server
 
 # NOT this (incorrect):
-# npx @modelcontextprotocol/inspector fastmcp run codelens.server:app
+# npx @modelcontextprotocol/inspector fastmcp run context_lens.server:app
 
 # Check that Python can find the module
-python -m codelens.server --help
+python -m context_lens.server --help
 ```
 
 **Tools not appearing in LLM client?**
@@ -637,14 +637,14 @@ env | grep MCP_KB
 # Use config file for complex setups
 cp config.example.yaml config.yaml
 # Edit config.yaml with your settings
-codelens --config config.yaml
+context-lens --config config.yaml
 ```
 
 **Still having issues?**
 1. Check the [documentation](#documentation) below
 2. Review logs in `./logs/` directory
 3. Try with MCP Inspector to isolate the issue
-4. Report bugs via [GitHub Issues](https://github.com/yourusername/codelens/issues)
+4. Report bugs via [GitHub Issues](https://github.com/cornelcroi/codelens/issues)
 
 ## Technical Details
 
