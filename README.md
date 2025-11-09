@@ -15,13 +15,20 @@ Context Lens is a self-contained Model Context Protocol (MCP) server with built-
 
 **Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication."
 
-### What You Get
+## Features
 
-- **Zero configuration** - Works instantly with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients
-- **Semantic understanding** - Vector embeddings powered by sentence-transformers
-- **100% local** - All data and processing stays on your machine
-- **GitHub integration** - Index entire repositories, specific directories, or single files
-- **Smart and fast** - Deduplication, lazy loading, and efficient vector search
+### Core Capabilities
+
+- 🔍 **Semantic Search** - Understand meaning, not just keywords - find related concepts even without exact matches
+- 🚀 **Zero Setup** - No installation, no configuration, no API keys - just add to your MCP config and go
+- 💾 **Serverless Vector Storage** - Built-in LanceDB means no external database to manage
+- 🔒 **100% Local & Private** - All data, embeddings, and processing stay on your machine
+
+### Content Sources
+
+- � ***Local Files & Folders** - Index your entire project or specific directories
+- � **GitHub Integration** - Add public repos, specific branches, directories, or single files
+- �  **20+ File Types** - Python, JavaScript, TypeScript, Java, Go, Rust, Markdown, and more
 
 ### Perfect For
 
