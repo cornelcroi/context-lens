@@ -69,6 +69,30 @@ Edit `~/.continue/config.json`:
 }
 ```
 
+### Alternative Installation Methods
+
+**Claude Desktop using npx:**
+```bash
+claude mcp add context-lens -- npx context-lens@latest
+```
+
+**OpenAI Codex:**
+```bash
+codex mcp add context-lens -- npx @context-lens@latest
+```
+
+**Or using node with the built file:**
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "node",
+      "args": ["/absolute/path/to/context-lens/dist/index.js"]
+    }
+  }
+}
+```
+
 ### Other MCP Clients
 
 For any MCP-compatible client, use:
