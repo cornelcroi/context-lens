@@ -69,6 +69,23 @@ Edit `~/.continue/config.json`:
 }
 ```
 
+### Cursor
+
+Add to `.cursor/mcp.json` in your workspace:
+
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"]
+    }
+  }
+}
+```
+
+Once configured, open the MCP Servers page in Cursor Settings to confirm the server is connected and view available tools.
+
 ### Alternative Installation Methods
 
 **Claude Desktop using npx:**
