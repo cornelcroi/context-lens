@@ -12,7 +12,7 @@ import asyncio
 import tempfile
 from pathlib import Path
 
-from codelens.server import (
+from context_lens.server import (
     add_document as add_document_tool,
     list_documents as list_documents_tool,
     search_documents as search_documents_tool,
@@ -40,7 +40,7 @@ async def search_documents(query: str, limit=10):
 async def clear_knowledge_base():
     """Call the clear_knowledge_base tool."""
     return await clear_knowledge_base_tool.fn()
-from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from context_lens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 @pytest.fixture

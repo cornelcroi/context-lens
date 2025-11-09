@@ -5,7 +5,7 @@ import tempfile
 import shutil
 from pathlib import Path
 
-from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from context_lens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 @pytest.fixture

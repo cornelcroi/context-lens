@@ -4,8 +4,8 @@ import pytest
 import asyncio
 from unittest.mock import patch, MagicMock
 
-from codelens.services.embedding_service import EmbeddingService
-from codelens.config import EmbeddingConfig, ProcessingConfig
+from context_lens.services.embedding_service import EmbeddingService
+from context_lens.config import EmbeddingConfig, ProcessingConfig
 
 
 class TestEmbeddingService:

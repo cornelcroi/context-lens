@@ -3,8 +3,8 @@
 import pytest
 from fastmcp import FastMCP
 
-from codelens.server import mcp, app
-from codelens.config import Config
+from context_lens.server import mcp, app
+from context_lens.config import Config
 
 
 class TestMCPServer:
@@ -22,7 +22,7 @@ class TestMCPServer:
     def test_tools_are_registered(self):
         """Test that all required tools are registered."""
         # Import the tool functions to verify they exist as FunctionTool objects
-        from codelens.server import add_document, list_documents, search_documents, clear_knowledge_base
+        from context_lens.server import add_document, list_documents, search_documents, clear_knowledge_base
         
         # Verify they are FunctionTool objects (wrapped by FastMCP)
         from fastmcp.tools import FunctionTool
@@ -39,7 +39,7 @@ class TestMCPServer:
     
     def test_tool_descriptions(self):
         """Test that tools have proper descriptions."""
-        from codelens.server import add_document, list_documents, search_documents, clear_knowledge_base
+        from context_lens.server import add_document, list_documents, search_documents, clear_knowledge_base
         
         # Verify tools have descriptions
         assert add_document.description is not None
@@ -56,7 +56,7 @@ class TestMCPServer:
     
     def test_server_utility_functions(self):
         """Test that server utility functions exist."""
-        from codelens.server import get_document_service
+        from context_lens.server import get_document_service
         
         # Verify get_document_service exists and is callable
         assert callable(get_document_service)
@@ -69,7 +69,7 @@ class TestMCPServerIntegration:
         """Test that the server can be imported without errors."""
         # This test verifies that all imports work correctly
         try:
-            from codelens.server import (
+            from context_lens.server import (
                 mcp, app, get_document_service,
                 add_document, list_documents, search_documents, clear_knowledge_base
             )
@@ -90,7 +90,7 @@ class TestMCPServerIntegration:
     
     def test_document_service_integration(self):
         """Test that DocumentService can be imported and instantiated."""
-        from codelens.services.document_service import DocumentService
+        from context_lens.services.document_service import DocumentService
         
         # Verify DocumentService can be instantiated
         config = Config.from_env()

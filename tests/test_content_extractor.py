@@ -3,9 +3,9 @@
 import pytest
 from pathlib import Path
 
-from codelens.processors.content_extractor import ContentExtractor
-from codelens.processors import FileProcessingError
-from codelens.models.data_models import DocumentMetadata, DocumentChunk
+from context_lens.processors.content_extractor import ContentExtractor
+from context_lens.processors import FileProcessingError
+from context_lens.models.data_models import DocumentMetadata, DocumentChunk
 
 
 class TestContentExtractor:

@@ -4,7 +4,7 @@ import pytest
 import tempfile
 from pathlib import Path
 
-from codelens.processors import (
+from context_lens.processors import (
     FileReader,
     PythonFileReader,
     TextFileReader,

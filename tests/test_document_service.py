@@ -5,8 +5,8 @@ import asyncio
 import tempfile
 from pathlib import Path
 
-from codelens.services.document_service import DocumentService
-from codelens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
+from context_lens.services.document_service import DocumentService
+from context_lens.config import Config, DatabaseConfig, EmbeddingConfig, ProcessingConfig, ServerConfig
 
 
 class TestDocumentService:

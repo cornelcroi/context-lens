@@ -18,8 +18,8 @@ import os
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from codelens import server
-from codelens.config import Config
+from context_lens import server
+from context_lens.config import Config
 
 
 class TestMCPInspectorCompatibility:
@@ -53,7 +53,7 @@ class TestMCPInspectorCompatibility:
         start_time = time.time()
         
         # Import and setup should be fast (no model loading)
-        from codelens import server as test_server
+        from context_lens import server as test_server
         
         elapsed = time.time() - start_time
         
