@@ -45,7 +45,12 @@ from context_lens.config import Config, DatabaseConfig, EmbeddingConfig, Process
 
 @pytest.fixture
 async def integration_config(temp_dir):
-    """Create integration test configuration."""
+    """Create integration test configuration with service reset."""
+    from context_lens.server import reset_document_service
+    
+    # Reset service before each test
+    await reset_document_service()
+    
     config = Config(
         database=DatabaseConfig(
             path=str(temp_dir / "integration_kb.db"),

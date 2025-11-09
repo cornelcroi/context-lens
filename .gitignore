@@ -62,7 +62,9 @@ knowledge_base.db/
 test_*.db/
 
 # Models and cache (users download their own)
-models/
+# Ignore downloaded model files but not source code
+/*.models/
+/models/
 test_models/
 cache/
 test_cache/

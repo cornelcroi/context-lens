@@ -110,6 +110,23 @@ async def get_document_service() -> DocumentService:
     return _document_service
 
 
+async def reset_document_service() -> None:
+    """Reset the global document service instance for testing.
+    
+    This function is intended for use in test fixtures to ensure test isolation.
+    It safely clears the global service instance using the initialization lock
+    to prevent race conditions during concurrent access.
+    
+    Note: This is a test-only function and should not be used in production code.
+    The function is idempotent and safe to call multiple times.
+    """
+    global _document_service
+    
+    async with _initialization_lock:
+        logger.debug("Resetting document service for test isolation")
+        _document_service = None
+
+
 @mcp.tool()
 async def add_document(file_path: str) -> Dict[str, Any]:
     """Adds a document or GitHub repository to the knowledge base.
