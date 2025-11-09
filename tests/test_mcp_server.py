@@ -52,7 +52,7 @@ class TestMCPServer:
         assert "Searches documents" in search_documents.description
         
         assert clear_knowledge_base.description is not None
-        assert "Clear all documents" in clear_knowledge_base.description
+        assert "Removes all documents" in clear_knowledge_base.description
     
     def test_server_utility_functions(self):
         """Test that server utility functions exist."""
