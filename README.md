@@ -1,21 +1,35 @@
-<h2 align="center">Context Lens</h2>
-<p align="center">Give your LLM glasses to understand meaning, not just read words</p>
+# Context Lens
 
-## What's the Context Lens ❓
-
-Context Lens is semantic search for AI assistants. Drop in any knowledge source - documentation, repositories, notes, or local files - and your AI can instantly understand and answer questions about it. No configuration, no build step - it just works.
-
----
+**Give your AI the ability to understand meaning, not just match keywords.**
 
 [![Tests](https://github.com/cornelcroi/codelens/workflows/Tests/badge.svg)](https://github.com/cornelcroi/codelens/actions)
 [![PyPI version](https://badge.fury.io/py/context-lens.svg)](https://badge.fury.io/py/context-lens)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## What is Context Lens?
 
-CodeLens is a Model Context Protocol (MCP) server that gives AI assistants the ability to semantically search and understand any content using vector embeddings and LanceDB.
+Context Lens is a self-contained Model Context Protocol (MCP) server with built-in serverless vector storage (LanceDB) that brings semantic search to your AI assistant. Point it at any codebase, documentation, or text files - local or on GitHub - and your AI can instantly understand and answer questions about the content.
 
-Works with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients.
+**Traditional keyword search** finds files containing specific words. Miss the exact term? Miss the code.
+
+**Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication."
+
+### What You Get
+
+- **Zero configuration** - Works instantly with Claude Desktop, Kiro IDE, Continue.dev, and other MCP clients
+- **Semantic understanding** - Vector embeddings powered by sentence-transformers
+- **100% local** - All data and processing stays on your machine
+- **GitHub integration** - Index entire repositories, specific directories, or single files
+- **Smart and fast** - Deduplication, lazy loading, and efficient vector search
+
+### Perfect For
+
+- 🔍 **Code discovery** - "How does this project handle database connections?"
+- 📚 **Learning** - Add React's source code and ask "How do hooks work internally?"
+- 🐛 **Debugging** - "Find similar error handling patterns in this codebase"
+- 👥 **Onboarding** - Help new team members understand your architecture
+- ♻️ **Refactoring** - "Where else do we use this deprecated pattern?"
 
 ## Setup with Your LLM
 
