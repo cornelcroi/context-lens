@@ -200,50 +200,7 @@ Context Lens works with any text-based content:
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         Your LLM Client                              │
-│              (Claude Desktop, Kiro IDE, Continue.dev)                │
-└────────────────────────────────┬────────────────────────────────────┘
-                                 │ MCP Protocol
-                                 ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       Context Lens Server                            │
-│                                                                       │
-│  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
-│  │  add_document   │  │ search_documents │  │ list_documents   │  │
-│  │                 │  │                  │  │                  │  │
-│  │  Ingests files  │  │  Semantic search │  │  Browse indexed  │  │
-│  │  (.py, .txt)    │  │  with vectors    │  │  documents       │  │
-│  └────────┬────────┘  └────────┬─────────┘  └────────┬─────────┘  │
-│           │                    │                      │             │
-│           ▼                    ▼                      ▼             │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │              Document Processing Pipeline                     │  │
-│  │                                                                │  │
-│  │  1. Content Extraction  →  2. Chunking  →  3. Embedding      │  │
-│  │     • File reading          • Smart split    • Sentence       │  │
-│  │     • Encoding detect       • Overlap        Transformers     │  │
-│  │     • Hash generation       • Metadata       • Local model    │  │
-│  └────────────────────────────┬─────────────────────────────────┘  │
-│                                ▼                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                    LanceDB Vector Store                       │  │
-│  │                                                                │  │
-│  │  📄 Documents Table          📦 Chunks Table                  │  │
-│  │  • Metadata                  • Text content                   │  │
-│  │  • File paths                • 384-dim vectors                │  │
-│  │  • Timestamps                • Document refs                  │  │
-│  │  • Chunk counts              • Fast ANN search                │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────┘
-                                 │
-                                 ▼
-                    💾 Local Storage (100% Offline)
-                    • knowledge_base.db
-                    • Embedding model cache
-                    • No external API calls
-```
+![Context Lens Architecture](img/architecture.jpg)
 
 
 ## Manual Installation (Optional)
@@ -266,39 +223,31 @@ pip install -e .
 
 ## What You Can Add
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Supported Input Types                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                       │
-│  📁 Local Files & Directories                                        │
-│  ├─ Single file:      /path/to/script.py                            │
-│  ├─ Directory:        /path/to/project/src/                         │
-│  └─ Recursive:        Automatically processes subdirectories         │
-│                                                                       │
-│  🐙 GitHub Repositories (Public)                                     │
-│  ├─ Entire repo:      https://github.com/user/repo                  │
-│  ├─ Specific branch:  https://github.com/user/repo/tree/develop     │
-│  ├─ Subdirectory:     https://github.com/user/repo/tree/main/src    │
-│  └─ Single file:      https://github.com/user/repo/blob/main/file.py│
-│                                                                       │
-│  📄 Supported File Types (20+ formats)                               │
-│  ├─ Python:           .py                                            │
-│  ├─ JavaScript/TS:    .js, .jsx, .ts, .tsx                          │
-│  ├─ Web:              .md, .txt, .json, .yaml, .yml                 │
-│  ├─ Systems:          .java, .cpp, .c, .h, .go, .rs                 │
-│  └─ Scripts:          .sh, .bash, .rb, .php                         │
-│                                                                       │
-│  🚫 Automatically Ignored                                            │
-│  ├─ Dependencies:     node_modules, venv, vendor                    │
-│  ├─ Build outputs:    dist, build, target, out                      │
-│  ├─ Caches:           __pycache__, .cache, .pytest_cache            │
-│  ├─ Version control:  .git, .svn, .hg                               │
-│  ├─ IDE files:        .idea, .vscode, .vs                           │
-│  └─ Large files:      Files over 10MB                               │
-│                                                                       │
-└─────────────────────────────────────────────────────────────────────┘
-```
+### 📁 Local Files & Directories
+- **Single file**: `/path/to/script.py`
+- **Directory**: `/path/to/project/src/`
+- **Recursive**: Automatically processes subdirectories
+
+### �L GitHub Repositories (Public)
+- **Entire repo**: `https://github.com/user/repo`
+- **Specific branch**: `https://github.com/user/repo/tree/develop`
+- **Subdirectory**: `https://github.com/user/repo/tree/main/src`
+- **Single file**: `https://github.com/user/repo/blob/main/file.py`
+
+### �E Supported File Types (20+ formats)
+- **Python**: `.py`
+- **JavaScript/TypeScript**: `.js`, `.jsx`, `.ts`, `.tsx`
+- **Web**: `.md`, `.txt`, `.json`, `.yaml`, `.yml`
+- **Systems**: `.java`, `.cpp`, `.c`, `.h`, `.go`, `.rs`
+- **Scripts**: `.sh`, `.bash`, `.rb`, `.php`
+
+### 🚫 Automatically Ignored
+- **Dependencies**: `node_modules`, `venv`, `vendor`
+- **Build outputs**: `dist`, `build`, `target`, `out`
+- **Caches**: `__pycache__`, `.cache`, `.pytest_cache`
+- **Version control**: `.git`, `.svn`, `.hg`
+- **IDE files**: `.idea`, `.vscode`, `.vs`
+- **Large files**: Files over 10MB
 
 ### 💡 Try These Popular Repositories
 
@@ -334,37 +283,33 @@ https://github.com/requests/requests/tree/main/requests         # Requests lib
 
 Once connected to your LLM, you get six powerful tools:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ 📥 add_document(file_path_or_url)                               │
-│    Add documents to the knowledge base                          │
-│    → Local files: "/path/to/file.py"                            │
-│    → GitHub repos: "https://github.com/user/repo"               │
-│    → GitHub files: "https://github.com/user/repo/blob/main/..." │
-│    → Smart: Skips if already indexed with same content          │
-│    → Extracts content, creates embeddings, stores in LanceDB    │
-│                                                                  │
-│ 🔍 search_documents(query, limit=10)                            │
-│    Semantic search across all documents                         │
-│    → Finds relevant code/text by meaning, not just keywords     │
-│                                                                  │
-│ 📋 list_documents(limit=100, offset=0)                          │
-│    List all indexed documents with pagination                   │
-│    → Browse what's in your knowledge base                       │
-│                                                                  │
-│ ℹ️  get_document_info(file_path)                                │
-│    Get metadata about a specific document                       │
-│    → Check if indexed, when added, content hash, chunk count    │
-│                                                                  │
-│ 🗑️  remove_document(file_path)                                  │
-│    Remove a specific document from the knowledge base           │
-│    → Clean up outdated or unwanted files                        │
-│                                                                  │
-│ 🧹 clear_knowledge_base()                                       │
-│    Remove all documents and start fresh                         │
-│    → Complete reset when needed                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
+### 📥 add_document(file_path_or_url)
+Add documents to the knowledge base
+- Local files: `"/path/to/file.py"`
+- GitHub repos: `"https://github.com/user/repo"`
+- GitHub files: `"https://github.com/user/repo/blob/main/..."`
+- Smart: Skips if already indexed with same content
+- Extracts content, creates embeddings, stores in LanceDB
+
+### 🔍 search_documents(query, limit=10)
+Semantic search across all documents
+- Finds relevant code/text by meaning, not just keywords
+
+### 📋 list_documents(limit=100, offset=0)
+List all indexed documents with pagination
+- Browse what's in your knowledge base
+
+### ℹ️ get_document_info(file_path)
+Get metadata about a specific document
+- Check if indexed, when added, content hash, chunk count
+
+### 🗑️ remove_document(file_path)
+Remove a specific document from the knowledge base
+- Clean up outdated or unwanted files
+
+### 🧹 clear_knowledge_base()
+Remove all documents and start fresh
+- Complete reset when needed
 
 ### Example Conversations
 
