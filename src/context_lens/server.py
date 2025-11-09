@@ -86,10 +86,8 @@ setup_file_logging()
 logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
-mcp = FastMCP(
-    "Context Lens",
-    description="Semantic search knowledge base for AI assistants - add documents and search by meaning, not just keywords"
-)
+# Semantic search knowledge base for AI assistants - add documents and search by meaning, not just keywords
+mcp = FastMCP("Context Lens")
 
 # Global document service instance and initialization lock
 _document_service: Optional[DocumentService] = None
