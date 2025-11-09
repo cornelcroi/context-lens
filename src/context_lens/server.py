@@ -1,4 +1,4 @@
-"""CodeLens MCP Server - Give your LLM glasses to understand meaning, not just read words."""
+"""ContextLens MCP Server - Give your LLM glasses to understand meaning, not just read words."""
 
 import asyncio
 import logging
@@ -31,7 +31,24 @@ def setup_file_logging(log_level: str = "INFO") -> None:
     Args:
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
     """
-    log_path = Path("logs")
+    import os
+    
+    # Use LOG_DIR env var if set, otherwise use a writable location
+    if "LOG_DIR" in os.environ:
+        log_path = Path(os.environ["LOG_DIR"]).expanduser()
+    else:
+        # Try current directory first, fall back to home directory if not writable
+        try:
+            log_path = Path("logs")
+            log_path.mkdir(parents=True, exist_ok=True)
+            # Test if writable
+            test_file = log_path / ".write_test"
+            test_file.touch()
+            test_file.unlink()
+        except (OSError, PermissionError):
+            # Fall back to user's home directory
+            log_path = Path.home() / ".context-lens" / "logs"
+    
     log_path.mkdir(parents=True, exist_ok=True)
 
     root_logger = logging.getLogger()
@@ -69,7 +86,10 @@ setup_file_logging()
 logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
-mcp = FastMCP("CodeLens")
+mcp = FastMCP(
+    "Context Lens",
+    description="Semantic search knowledge base for AI assistants - add documents and search by meaning, not just keywords"
+)
 
 # Global document service instance and initialization lock
 _document_service: Optional[DocumentService] = None
@@ -365,12 +385,12 @@ if __name__ == "__main__":
     """Direct execution entry point for MCP Inspector compatibility.
 
     This allows running the server with:
-        python -m codelens.server
+        python -m context_lens.server
 
     FastMCP's run() method handles:
     - stdio transport setup
     - Signal handling
     - Server lifecycle management
     """
-    logger.info("Starting CodeLens MCP Server in stdio mode...")
+    logger.info("Starting Context Lens MCP Server in stdio mode...")
     mcp.run()

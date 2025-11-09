@@ -40,7 +40,7 @@ Context Lens is a self-contained Model Context Protocol (MCP) server with built-
 
 ## Setup with Your LLM
 
-No installation needed! Just configure your AI assistant to use CodeLens:
+No installation needed! Just configure your AI assistant to use Context Lens:
 
 ### 📘 Claude Desktop
 
@@ -186,7 +186,7 @@ For any MCP-compatible client, use the standard configuration:
 
 ## What You Can Add
 
-CodeLens works with any text-based content:
+Context Lens works with any text-based content:
 
 - **📄 Single files**: `./README.md`, `/path/to/document.txt`
 - **📁 Local folders**: `./docs/`, `/path/to/project/`
@@ -208,7 +208,7 @@ CodeLens works with any text-based content:
                                  │ MCP Protocol
                                  ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          CodeLens Server                             │
+│                       Context Lens Server                            │
 │                                                                       │
 │  ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
 │  │  add_document   │  │ search_documents │  │ list_documents   │  │
@@ -259,8 +259,8 @@ pip install context-lens
 Or install from source:
 
 ```bash
-git clone https://github.com/cornelcroi/codelens.git
-cd codelens
+git clone https://github.com/cornelcroi/context-lens.git
+cd context-lens
 pip install -e .
 ```
 
@@ -518,7 +518,7 @@ Once you've added documents, here are powerful queries you can ask:
 
 ### For Local Development (Not Yet Published)
 
-If you're developing CodeLens locally:
+If you're developing Context Lens locally:
 
 **Claude Desktop:**
 ```json
@@ -732,7 +732,7 @@ context-lens --config config.yaml
 1. Check the [documentation](#documentation) below
 2. Review logs in `./logs/` directory
 3. Try with MCP Inspector to isolate the issue
-4. Report bugs via [GitHub Issues](https://github.com/cornelcroi/codelens/issues)
+4. Report bugs via [GitHub Issues](https://github.com/cornelcroi/context-lens/issues)
 
 ## Technical Details
 
@@ -767,8 +767,8 @@ Supported file types:
 To contribute or run from source:
 
 ```bash
-git clone https://github.com/yourusername/codelens.git
-cd codelens
+git clone https://github.com/yourusername/context-lens.git
+cd context-lens
 pip install -e .
 pytest tests/
 ```
@@ -780,7 +780,7 @@ Configure via environment variables in your MCP client:
 ```json
 {
   "env": {
-    "LANCE_DB_PATH": "./codelens.db",
+    "LANCE_DB_PATH": "./context-lens.db",
     "LOG_LEVEL": "INFO"
   }
 }
@@ -790,7 +790,7 @@ Configure via environment variables in your MCP client:
 
 Contributions are welcome! This is an open-source project.
 
-- Report bugs and request features via [GitHub Issues](https://github.com/yourusername/codelens/issues)
+- Report bugs and request features via [GitHub Issues](https://github.com/yourusername/context-lens/issues)
 - Submit pull requests for improvements
 - Star the repo if you find it useful! ⭐
 

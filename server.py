@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CodeLens - Give your LLM glasses to understand meaning, not just read words
+Context Lens - Give your LLM glasses to understand meaning, not just read words
 
 Run this file directly to start the MCP server in stdio mode:
     python server.py

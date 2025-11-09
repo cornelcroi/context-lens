@@ -14,7 +14,7 @@ class TestMCPServer:
         """Test that the MCP server is properly initialized."""
         # Verify mcp is a FastMCP instance
         assert isinstance(mcp, FastMCP)
-        assert mcp.name == "CodeLens"
+        assert mcp.name == "Context Lens"
 
         # Verify app is the same as mcp
         assert app is mcp

@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for CodeLens tests."""
+"""Pytest configuration and fixtures for Context Lens tests."""
 
 import shutil
 import tempfile

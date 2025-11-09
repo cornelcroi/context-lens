@@ -1,4 +1,4 @@
-"""Integration tests for CodeLens.
+"""Integration tests for Context Lens.
 
 These tests verify end-to-end workflows including:
 - Complete document ingestion workflow

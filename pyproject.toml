@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "context-lens"
 version = "0.1.0"
-description = "CodeLens - Give your LLM glasses to understand meaning, not just read words. Semantic search for AI assistants."
+description = "Context Lens - Give your LLM glasses to understand meaning, not just read words. Semantic search for AI assistants."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -60,16 +60,16 @@ dev = [
 ]
 
 # Entry points for running the server
-# - CLI entry point: codelens (via main.py with argument parsing)
-# - Module entry point: python -m codelens.server (for MCP Inspector)
-# - Direct import: from codelens.server import app (for programmatic use)
+# - CLI entry point: context-lens (via main.py with argument parsing)
+# - Module entry point: python -m context_lens.server (for MCP Inspector)
+# - Direct import: from context_lens.server import app (for programmatic use)
 [project.scripts]
 context-lens = "context_lens.main:run"
 
 [project.urls]
-Homepage = "https://github.com/cornelcroi/codelens"
-Repository = "https://github.com/cornelcroi/codelens"
-Issues = "https://github.com/cornelcroi/codelens/issues"
+Homepage = "https://github.com/cornelcroi/context-lens"
+Repository = "https://github.com/cornelcroi/context-lens"
+Issues = "https://github.com/cornelcroi/context-lens/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
