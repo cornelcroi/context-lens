@@ -15,6 +15,32 @@ Context Lens is a self-contained Model Context Protocol (MCP) server with built-
 
 **Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication."
 
+## Why LanceDB?
+
+Context Lens uses **LanceDB** as its vector database - a modern, serverless solution that makes semantic search accessible to everyone:
+
+**🆓 Completely Free & Local**
+- No cloud services, no API keys, no subscriptions
+- No servers to run or manage
+- All data stays on your machine - 100% private
+
+**⚡ Zero Infrastructure**
+- Embedded database - just a file on disk
+- No installation, no configuration, no setup
+- Works like SQLite but for vectors
+
+**🚀 Fast & Efficient**
+- Built on Apache Arrow for columnar storage
+- Optimized for vector similarity search
+- Handles millions of embeddings efficiently
+
+**💾 Simple Storage**
+- Single file database (`knowledge_base.db`)
+- Easy to backup, move, or delete
+- No complex database management
+
+Think of it as "SQLite for AI embeddings" - all the power of vector search without the complexity of traditional vector databases.
+
 ## Features
 
 ### Core Capabilities
@@ -822,6 +848,50 @@ cd context-lens
 pip install -e .
 pytest tests/
 ```
+
+## Roadmap
+
+We're actively working on making Context Lens even more powerful. Here's what's coming:
+
+### 🎯 Planned Features
+
+**Cloud Storage Integration**
+- 📦 **S3 Support** - Store LanceDB database in AWS S3 for team sharing and backup
+- ☁️ **Cloud Sync** - Sync knowledge base across multiple machines
+- 🔄 **Remote Databases** - Access shared knowledge bases from anywhere
+
+**Enhanced Embedding Options**
+- 🤖 **API-based Models** - Use OpenAI, Cohere, or other API providers for embeddings
+- 🔄 **Model Switching** - Change embedding models without re-indexing
+- 🎛️ **Custom Models** - Bring your own fine-tuned models
+- 📊 **Model Comparison** - Test different models to find the best fit
+
+**Advanced Features**
+- 🔍 **Hybrid Search** - Combine semantic and keyword search for better results
+- 📈 **Search Analytics** - Track what queries work best
+- 🏷️ **Document Tagging** - Organize documents with custom tags
+- 🔗 **Cross-References** - Automatically link related documents
+- 📝 **Incremental Updates** - Smart re-indexing of changed files
+
+**Developer Experience**
+- 🐳 **Docker Support** - Containerized deployment
+- 🔌 **REST API** - Use Context Lens outside of MCP
+- 📚 **Python SDK** - Programmatic access to all features
+- 🧪 **Testing Tools** - Evaluate search quality
+
+**Enterprise Features**
+- 👥 **Multi-user Support** - Shared knowledge bases with access control
+- 🔐 **Authentication** - Secure access to knowledge bases
+- 📊 **Usage Metrics** - Track usage and performance
+- 🔄 **Backup & Restore** - Automated backup strategies
+
+### 💡 Have Ideas?
+
+We'd love to hear your suggestions! Open an issue on GitHub to:
+- Request new features
+- Suggest improvements
+- Share your use cases
+- Report bugs
 
 ## Contributing
 
