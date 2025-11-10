@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/cornelcroi-context-lens-badge.png)](https://mseep.ai/app/cornelcroi-context-lens)
+
 # Context Lens
 
 **Give your AI the ability to understand meaning, not just match keywords.**
