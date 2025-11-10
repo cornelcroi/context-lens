@@ -405,8 +405,15 @@ class DocumentService:
                     "error_details": {"query": query},
                 }
 
+            # Normalize query for processing
+            query_processed = query.strip()
+
+            # Collect search statistics
+            total_documents = await self.db_manager.get_document_count()
+            embedding_model = self.config.embedding.model
+
             # Generate embedding for query
-            query_embedding = await self.embedding_service.generate_embedding(query.strip())
+            query_embedding = await self.embedding_service.generate_embedding(query_processed)
 
             if not query_embedding:
                 return {
@@ -484,6 +491,11 @@ class DocumentService:
                 "result_count": len(results_list),
                 "message": f"Found {len(results_list)} relevant documents"
                 + (f" (showing top {limit})" if len(results_list) == limit else ""),
+                "_search_stats": {
+                    "query_processed": query_processed,
+                    "embedding_model": embedding_model,
+                    "total_documents": total_documents,
+                },
             }
 
         except Exception as e:

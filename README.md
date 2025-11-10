@@ -175,6 +175,18 @@ For any MCP-compatible client, use the standard configuration:
   "mcpServers": {
     "context-lens": {
       "command": "uvx",
+      "args": ["context-lens", "--db-path", "./my_knowledge_base.db"]
+    }
+  }
+}
+```
+
+Or using environment variables:
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
       "args": ["context-lens"],
       "env": {
         "LANCE_DB_PATH": "./my_knowledge_base.db"
@@ -183,6 +195,8 @@ For any MCP-compatible client, use the standard configuration:
   }
 }
 ```
+
+> **💡 For all configuration options**, see [Advanced Configuration](#advanced-configuration) section below.
 
 ## What You Can Add
 
@@ -461,58 +475,133 @@ Once you've added documents, here are powerful queries you can ask:
 
 ## Advanced Configuration
 
-### For Local Development (Not Yet Published)
+### CLI Parameters
 
-If you're developing Context Lens locally:
+Context Lens supports CLI parameters for customization. Here are all available options:
 
-**Claude Desktop:**
+**Basic Usage:**
 ```json
 {
   "mcpServers": {
     "context-lens": {
-      "command": "context-lens"
+      "command": "uvx",
+      "args": ["context-lens"]
     }
   }
 }
 ```
 
-**Kiro IDE:**
+**All CLI Parameters:**
 ```json
 {
   "mcpServers": {
     "context-lens": {
-      "command": "python",
-      "args": ["-m", "context_lens.main"],
-      "disabled": false,
-      "autoApprove": ["list_documents", "search_documents"]
+      "command": "uvx",
+      "args": [
+        "context-lens",
+        "--config", "/path/to/config.yaml",
+        "--db-path", "/path/to/knowledge_base.db",
+        "--log-level", "DEBUG"
+      ]
     }
   }
 }
 ```
 
-### MCP Inspector (Testing & Development)
+**Available CLI Options:**
+- `--config PATH` - Path to YAML configuration file
+- `--db-path PATH` - Path to LanceDB database (default: `./knowledge_base.db`)
+- `--log-level LEVEL` - Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+- `--show-config` - Display current configuration and exit
+- `--version` - Show version information
+- `--help` - Show help message
 
-MCP Inspector is a web-based tool for testing MCP servers during development.
+### Environment Variables
 
-**Quick Start:**
-```bash
-# Test with MCP Inspector
-DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector python -m context_lens.server
+All configuration can be set via environment variables:
+
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"],
+      "env": {
+        "LANCE_DB_PATH": "/path/to/knowledge_base.db",
+        "LANCE_DB_TABLE_PREFIX": "kb_",
+        "LOG_LEVEL": "DEBUG",
+        "MCP_SERVER_NAME": "my-knowledge-base",
+        "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2",
+        "EMBEDDING_BATCH_SIZE": "32",
+        "EMBEDDING_CACHE_DIR": "./models",
+        "MAX_FILE_SIZE_MB": "10",
+        "CHUNK_SIZE": "1000",
+        "CHUNK_OVERLAP": "200",
+        "SUPPORTED_EXTENSIONS": ".py,.txt,.md,.js,.ts,.java,.cpp,.c,.h,.go,.rs,.sh,.bash,.rb,.php,.json,.yaml,.yml,.jsx,.tsx"
+      }
+    }
+  }
+}
 ```
 
-**What happens:**
-1. Server starts in < 1 second (lazy initialization)
-2. Inspector opens in your browser showing all 6 tools
-3. First tool invocation loads embedding models (5-10 seconds, one-time)
-4. Subsequent calls are fast (< 1 second)
+**Environment Variables Reference:**
 
-**Testing workflow:**
-- Use Inspector's UI to call tools with different parameters
-- View request/response JSON in real-time
-- Check logs in `./logs/context-lens.log` for detailed info
-- Test error handling with invalid inputs
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LANCE_DB_PATH` | `./knowledge_base.db` | Path to LanceDB database |
+| `LANCE_DB_TABLE_PREFIX` | `kb_` | Prefix for database tables |
+| `LOG_LEVEL` | `INFO` | Logging level |
+| `MCP_SERVER_NAME` | `knowledge-base` | Server name for identification |
+| `EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Embedding model to use |
+| `EMBEDDING_BATCH_SIZE` | `32` | Batch size for embedding processing |
+| `EMBEDDING_CACHE_DIR` | `./models` | Directory to cache embedding models |
+| `MAX_FILE_SIZE_MB` | `10` | Maximum file size to process (MB) |
+| `CHUNK_SIZE` | `1000` | Text chunk size for processing |
+| `CHUNK_OVERLAP` | `200` | Overlap between text chunks |
+| `SUPPORTED_EXTENSIONS` | See [Supported File Types](#supported-file-types) | Comma-separated list of file extensions |
 
-**Note:** The server uses lazy initialization, so startup is fast but the first tool call will take longer as it loads the embedding model. This is expected behavior and only happens once per session.
+### Configuration File (YAML)
+
+Create a `config.yaml` file for complex setups:
+
+```yaml
+database:
+  path: "./knowledge_base.db"
+  table_prefix: "kb_"
+
+embedding:
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  batch_size: 32
+  cache_dir: "./models"
+
+processing:
+  max_file_size_mb: 10
+  chunk_size: 1000
+  chunk_overlap: 200
+  supported_extensions:
+    - ".py"
+    - ".txt"
+    - ".md"
+    - ".js"
+    - ".ts"
+    # See "Supported File Types" section for complete list
+
+server:
+  name: "knowledge-base"
+  log_level: "INFO"
+```
+
+Then use it:
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens", "--config", "config.yaml"]
+    }
+  }
+}
+```
 
 ## How It Works
 
@@ -698,14 +787,30 @@ context-lens --config config.yaml
 
 ### Supported File Types
 
-Supported file types:
-- `.py` - Python source code
-- `.txt` - Plain text files
+**Complete list of supported file extensions (23 formats):**
+
+**Programming Languages:**
+- `.py` - Python
+- `.js`, `.jsx` - JavaScript
+- `.ts`, `.tsx` - TypeScript  
+- `.java` - Java
+- `.cpp`, `.c`, `.h`, `.hpp` - C/C++
+- `.go` - Go
+- `.rs` - Rust
+- `.rb` - Ruby
+- `.php` - PHP
+
+**Documentation & Config:**
+- `.txt` - Plain text
 - `.md` - Markdown
-- `.js`, `.ts` - JavaScript/TypeScript
-- `.java`, `.cpp`, `.c`, `.h` - C/C++/Java
-- `.go`, `.rs` - Go/Rust
-- And more text-based formats
+- `.json` - JSON
+- `.yaml`, `.yml` - YAML
+- `.toml` - TOML
+
+**Scripts:**
+- `.sh` - Shell script
+- `.bash` - Bash script
+- `.zsh` - Zsh script
 
 ## Contributing
 
@@ -716,19 +821,6 @@ git clone https://github.com/yourusername/context-lens.git
 cd context-lens
 pip install -e .
 pytest tests/
-```
-
-### Environment Variables
-
-Configure via environment variables in your MCP client:
-
-```json
-{
-  "env": {
-    "LANCE_DB_PATH": "./context-lens.db",
-    "LOG_LEVEL": "INFO"
-  }
-}
 ```
 
 ## Contributing

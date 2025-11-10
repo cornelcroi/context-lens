@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import time
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -233,14 +234,19 @@ async def list_documents(limit: Optional[int] = 100, offset: int = 0) -> Dict[st
 
 @mcp.tool()
 async def search_documents(query: str, limit: int = 10) -> Dict[str, Any]:
-    """Searches documents using vector similarity to find relevant content.
+    """Searches documents using semantic vector similarity to find relevant content.
+
+    Uses AI embeddings to understand meaning, not just keywords. Finds related concepts
+    even without exact word matches (e.g., "authentication" finds "login", "credentials").
 
     Args:
-        query (str): The text to search for
-        limit (int, optional): Maximum number of results to return. Default is 10
+        query (str): Natural language search query (1-10,000 characters)
+                    Examples: "How does authentication work?", "database connection patterns"
+        limit (int, optional): Maximum number of results to return (1-100). Default is 10
 
     Returns:
-        dict: Success status and ranked search results with relevance scores
+        dict: Success status, ranked results with relevance scores (0.0-1.0), 
+              content excerpts, document metadata, and search operation metadata
     """
     try:
         log_operation_start(
@@ -252,10 +258,55 @@ async def search_documents(query: str, limit: int = 10) -> Dict[str, Any]:
 
         query = query.strip()
 
+        # Capture start time for timing measurement
+        start_time = time.perf_counter()
+
         doc_service = await get_document_service()
         result = await doc_service.search_documents(query=query, limit=limit)
 
+        # Capture end time and calculate elapsed time in milliseconds
+        end_time = time.perf_counter()
+        search_time_ms = int((end_time - start_time) * 1000)
+
+        # Enrich successful responses with search_metadata
         if result.get("success"):
+            try:
+                # Extract values from service response _search_stats
+                search_stats = result.get("_search_stats", {})
+                
+                # Use fallback values if metadata fields are missing
+                embedding_model = search_stats.get("embedding_model")
+                if not embedding_model:
+                    logger.warning("Embedding model name not available in search stats, using fallback")
+                    embedding_model = "unknown"
+                
+                total_documents = search_stats.get("total_documents")
+                if total_documents is None:
+                    logger.warning("Total documents count not available in search stats, using fallback")
+                    total_documents = -1
+                
+                # Create search_metadata dictionary with all required fields
+                result["search_metadata"] = {
+                    "query_processed": query,  # Already stripped above
+                    "embedding_model": embedding_model,
+                    "search_time_ms": search_time_ms,
+                    "total_documents_searched": total_documents
+                }
+                
+                # Remove internal _search_stats fields from response
+                result.pop("_search_stats", None)
+                
+            except Exception as metadata_error:
+                # Log warning for metadata collection failures
+                logger.warning(
+                    f"Failed to collect search metadata: {metadata_error}",
+                    exc_info=True
+                )
+                # Ensure search operation succeeds even if metadata fails
+                # Remove any partial metadata that might have been added
+                result.pop("search_metadata", None)
+                result.pop("_search_stats", None)
+            
             log_operation_success("search_documents", result_count=result.get("result_count", 0))
 
         return result
