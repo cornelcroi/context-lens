@@ -903,10 +903,52 @@ We'd love to hear your suggestions! Open an issue on GitHub to:
 
 ## Contributing
 
-Contributions are welcome! This is an open-source project.
+Contributions are welcome! We appreciate your interest in improving Context Lens.
 
-- Report bugs and request features via [GitHub Issues](https://github.com/yourusername/context-lens/issues)
-- Submit pull requests for improvements
+### How to Contribute
+
+**Before submitting a pull request, please:**
+
+1. **Open an issue first** - Describe what you'd like to add or fix
+2. **Discuss the approach** - I'll review and provide feedback on how it fits into the project
+3. **Get approval** - Once approved, you can start working on your contribution
+4. **Submit a PR** - Reference the issue in your pull request
+
+This process helps ensure:
+- Your time isn't wasted on changes that might not be accepted
+- The contribution aligns with the project's goals and architecture
+- We can provide guidance and avoid duplicate work
+
+### Ways to Contribute
+
+- 🐛 **Report bugs** - Found an issue? Let me know!
+- 💡 **Suggest features** - Have an idea? Open an issue to discuss it
+- 📝 **Improve documentation** - Help make the docs clearer
+- 🧪 **Add tests** - Improve test coverage
+- 🔧 **Fix bugs** - Pick an issue and submit a fix
+- ✨ **Add features** - Implement approved feature requests
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/cornelcroi/context-lens.git
+cd context-lens
+
+# Install in development mode
+pip install -e .
+
+# Run tests
+pytest tests/
+
+# Run with coverage
+pytest tests/ --cov=context_lens --cov-report=html
+```
+
+### Questions?
+
+- Open an issue for questions about contributing
+- Check existing issues to see if your question has been answered
 - Star the repo if you find it useful! ⭐
 
 ## License
