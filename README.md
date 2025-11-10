@@ -380,7 +380,7 @@ LLM: I'll add those files for you.
      [Calls add_document for each .py file]
      ✓ Added 15 Python files to the knowledge base
 
-You: How do we handle authentication in this codebase?
+You: How does this codebase handle authentication?
 
 LLM: Let me search for authentication-related code.
      [Calls search_documents with query "authentication handling"]
@@ -447,7 +447,7 @@ Once you've added documents, here are powerful queries you can ask:
 "Where is the rate limiting logic implemented?"
 "Show me similar error handling patterns"
 "How do other files handle this exception?"
-"Find all places where we validate user input"
+"Find all places where the code validates user input"
 ```
 
 ### 📚 Learning & Research
@@ -462,7 +462,7 @@ Once you've added documents, here are powerful queries you can ask:
 ### ♻️ Refactoring & Code Review
 ```
 "Find all files that use the old authentication method"
-"Where else do we use this deprecated function?"
+"Where else is this deprecated function used?"
 "Show me similar code that might have the same bug"
 "Find duplicate logic that could be refactored"
 "What files would be affected if I change this interface?"
@@ -697,14 +697,87 @@ Why: Understands meaning, not just words
 
 ### Real-World Use Cases
 
-- **🔍 Code Discovery** - "How do we handle database connections?"
+- **🔍 Code Discovery** - "How does this project handle database connections?"
 - **📚 Onboarding** - New team members understand the codebase faster
 - **🐛 Debugging** - "Find similar error handling patterns"
-- **♻️ Refactoring** - "Where do we use this deprecated pattern?"
+- **♻️ Refactoring** - "Where is this deprecated pattern used?"
 - **📖 Documentation** - "Explain how the auth system works"
 - **🎯 Code Review** - "Find related code that might be affected"
 - **🌟 Learn from OSS** - "Add the React repository and explain how hooks work"
 - **📦 Library Research** - "Add this library and show me how to use feature X"
+
+## FAQ
+
+### General Questions
+
+**Why is the first run slow?**
+
+The embedding model (~100MB) downloads on first use. This only happens once. Subsequent runs are fast.
+
+**Why is the first tool call slow?**
+
+The server uses lazy initialization - it starts quickly but loads the embedding model on the first tool invocation. This takes 5-10 seconds and only happens once per session. This is intentional to provide fast startup times for MCP Inspector and other tools.
+
+**Do I need an API key?**
+
+No! Context Lens runs completely locally. No API keys, no cloud services, no subscriptions.
+
+**Where is my data stored?**
+
+Everything is stored locally in `knowledge_base.db` in your current directory. You can change this location via configuration.
+
+**Can I use this with private/proprietary code?**
+
+Yes! All processing happens locally on your machine. Nothing is sent to external services.
+
+**How much disk space does it use?**
+
+- Embedding model: ~100MB (one-time download)
+- Database: ~1KB per text chunk (varies by content)
+- Example: A 10MB codebase typically uses ~5-10MB of database space
+
+**Can I share my knowledge base with my team?**
+
+Currently, the database is local. Team sharing via S3 or cloud storage is on the [roadmap](#roadmap).
+
+**How does this compare to GitHub's MCP server?**
+
+Context Lens and GitHub's MCP server serve different purposes and excel at different tasks:
+
+**Context Lens is better for:**
+- 🧠 **Semantic understanding** - "Find authentication code" returns login, credentials, tokens, OAuth - even without exact keyword matches
+- 📚 **Learning codebases** - Ask "How does X work?" and get conceptually relevant results across the entire project
+- 🔍 **Pattern discovery** - Find similar code patterns, error handling approaches, or architectural decisions
+- 💾 **Offline development** - Once indexed, works without internet connection
+- 🔒 **Privacy** - All processing happens locally, no data sent to external services
+- 🎯 **Holistic exploration** - Index entire repositories at once and search across all files semantically
+
+**GitHub's MCP server is better for:**
+- 🔧 **Repository management** - Create issues, manage PRs, handle CI/CD operations
+- 📊 **Real-time state** - Always fetches the latest version from GitHub
+- 🌐 **GitHub-specific features** - Integrates with GitHub's ecosystem (Actions, Projects, etc.)
+- 📁 **Precise file access** - When you know exactly which file you need
+
+**Key Architectural Differences:**
+
+*Context Lens approach:*
+```
+GitHub URL → Clone once → Index everything → Fast semantic search (offline)
+```
+
+*GitHub MCP approach:*
+```
+Each query → API call → Fetch specific file → Keyword-based results (online)
+```
+
+**Why Context Lens uses cloning instead of GitHub's API:**
+- ✅ **Faster** - One-time clone vs multiple API calls
+- ✅ **No rate limits** - Process thousands of files without API restrictions  
+- ✅ **Better for bulk** - Index entire repositories efficiently
+- ✅ **Offline capable** - Search without internet after initial clone
+- ✅ **Full context** - Access to entire repository structure, git history, and relationships
+
+**They complement each other!** Use Context Lens to understand and explore code semantically, and GitHub's MCP for repository management and real-time GitHub operations.
 
 ## Troubleshooting
 
@@ -721,12 +794,6 @@ tail -f logs/context-lens.log
 # Check for errors
 tail -f logs/errors.log
 ```
-
-**First run is slow?**
-The embedding model (~100MB) downloads on first use. This only happens once. Subsequent runs are fast.
-
-**First tool call is slow?**
-The server uses lazy initialization - it starts quickly but loads the embedding model on the first tool invocation. This takes 5-10 seconds and only happens once per session. This is intentional to provide fast startup times for MCP Inspector and other tools.
 
 **MCP Inspector not connecting?**
 ```bash
@@ -851,7 +918,7 @@ pytest tests/
 
 ## Roadmap
 
-We're actively working on making Context Lens even more powerful. Here's what's coming:
+I'm actively working on making Context Lens even more powerful. Here's what's coming:
 
 ### 🎯 Planned Features
 
@@ -895,7 +962,7 @@ We're actively working on making Context Lens even more powerful. Here's what's 
 
 ### 💡 Have Ideas?
 
-We'd love to hear your suggestions! Open an issue on GitHub to:
+I'd love to hear your suggestions! Open an issue on GitHub to:
 - Request new features
 - Suggest improvements
 - Share your use cases
@@ -903,7 +970,7 @@ We'd love to hear your suggestions! Open an issue on GitHub to:
 
 ## Contributing
 
-Contributions are welcome! We appreciate your interest in improving Context Lens.
+Contributions are welcome! I appreciate your interest in improving Context Lens.
 
 ### How to Contribute
 
@@ -917,7 +984,7 @@ Contributions are welcome! We appreciate your interest in improving Context Lens
 This process helps ensure:
 - Your time isn't wasted on changes that might not be accepted
 - The contribution aligns with the project's goals and architecture
-- We can provide guidance and avoid duplicate work
+- I can provide guidance and avoid duplicate work
 
 ### Ways to Contribute
 
