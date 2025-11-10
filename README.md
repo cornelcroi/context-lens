@@ -866,6 +866,13 @@ We're actively working on making Context Lens even more powerful. Here's what's 
 - 🎛️ **Custom Models** - Bring your own fine-tuned models
 - 📊 **Model Comparison** - Test different models to find the best fit
 
+**Document Format Support**
+- 📄 **PDF Support** - Extract and index PDF documents
+- 📊 **Excel/Spreadsheets** - Index `.xls`, `.xlsx` files
+- 📝 **Word Documents** - Support for `.doc`, `.docx` files
+- 📑 **PowerPoint** - Index `.ppt`, `.pptx` presentations
+- 🌐 **HTML/Web** - Extract content from HTML files and web pages
+
 **Advanced Features**
 - 🔍 **Hybrid Search** - Combine semantic and keyword search for better results
 - 📈 **Search Analytics** - Track what queries work best
