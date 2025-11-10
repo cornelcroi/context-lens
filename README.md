@@ -867,11 +867,12 @@ We're actively working on making Context Lens even more powerful. Here's what's 
 - 📊 **Model Comparison** - Test different models to find the best fit
 
 **Document Format Support**
-- 📄 **PDF Support** - Extract and index PDF documents
-- 📊 **Excel/Spreadsheets** - Index `.xls`, `.xlsx` files
-- 📝 **Word Documents** - Support for `.doc`, `.docx` files
-- 📑 **PowerPoint** - Index `.ppt`, `.pptx` presentations
+- 📄 **PDF Support** - Extract and index PDF documents (local and from URLs)
+- 📊 **Excel/Spreadsheets** - Index `.xls`, `.xlsx` files (local and from URLs)
+- 📝 **Word Documents** - Support for `.doc`, `.docx` files (local and from URLs)
+- 📑 **PowerPoint** - Index `.ppt`, `.pptx` presentations (local and from URLs)
 - 🌐 **HTML/Web** - Extract content from HTML files and web pages
+- 🔗 **Direct URL Support** - Fetch and index documents directly from URLs (like GitHub raw files, Google Docs, Dropbox, etc.)
 
 **Advanced Features**
 - 🔍 **Hybrid Search** - Combine semantic and keyword search for better results
