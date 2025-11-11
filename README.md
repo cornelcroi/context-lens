@@ -76,51 +76,6 @@ Think of it as "SQLite for AI embeddings" - all the power of vector search witho
 
 No installation needed! Just configure your AI assistant to use Context Lens:
 
-### 📘 Claude Desktop
-
-**Config file location:**
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "context-lens": {
-      "command": "uvx",
-      "args": ["context-lens"]
-    }
-  }
-}
-```
-
-**Alternative using CLI:**
-```bash
-claude mcp add context-lens -- npx context-lens@latest
-```
-
-Restart Claude Desktop and you're ready!
-
----
-
-### 🎯 Cursor
-
-**Config file:** `.cursor/mcp.json` in your workspace
-
-```json
-{
-  "mcpServers": {
-    "context-lens": {
-      "command": "uvx",
-      "args": ["context-lens"]
-    }
-  }
-}
-```
-
-Open **Settings → MCP Servers** to confirm the connection and view available tools.
-
----
-
 ### ⚡ Kiro IDE
 
 **Config file:** `.kiro/settings/mcp.json` in your workspace
@@ -144,61 +99,103 @@ The `autoApprove` setting allows read-only operations without confirmation promp
 
 ---
 
-### 🔄 Continue.dev
+### 📘 Claude Desktop
 
-**Config file:** `~/.continue/config.json`
-
-```json
-{
-  "mcpServers": [
-    {
-      "name": "context-lens",
-      "command": "uvx",
-      "args": ["context-lens"]
-    }
-  ]
-}
-```
-
-Restart Continue.dev to apply changes.
-
----
-
-### 🤖 OpenAI Codex
-
-```bash
-codex mcp add context-lens -- npx @context-lens@latest
-```
-
----
-
-### 🔧 Advanced: Node.js Direct
-
-For custom setups or local development:
+**Config file location:**
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "context-lens": {
-      "command": "node",
-      "args": ["/absolute/path/to/context-lens/dist/index.js"]
+      "command": "uvx",
+      "args": ["context-lens"]
     }
   }
 }
 ```
 
+Restart Claude Desktop and you're ready!
+
 ---
 
 ### 🌐 Other MCP Clients
 
-For any MCP-compatible client, use the standard configuration:
+For any MCP-compatible client (Cursor, Continue.dev, etc.), use the standard configuration:
 
 ```json
 {
-  "command": "uvx",
-  "args": ["context-lens"]
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"]
+    }
+  }
 }
 ```
+
+**Config file locations:**
+- **Cursor:** `.cursor/mcp.json` in your workspace
+- **Continue.dev:** `~/.continue/config.json`
+- **Other clients:** Check your client's MCP configuration documentation
+
+---
+
+### 💻 Programmatic Usage
+
+Use Context Lens directly in your Python code with any MCP-compatible framework:
+
+```python
+#!/usr/bin/env python3
+import os
+from dotenv import load_dotenv
+from mcp import StdioServerParameters, stdio_client
+from strands import Agent
+from strands.models.openai import OpenAIModel
+from strands.tools.mcp import MCPClient
+
+def main():
+    # Load environment variables from .env file
+    load_dotenv()
+    
+    # Create MCP client for context-lens server
+    mcp_client = MCPClient(
+        lambda: stdio_client(
+            StdioServerParameters(
+                command="uvx",
+                args=["context-lens"]
+            )
+        )
+    )
+    
+    # Create an agent with OpenAI model and MCP tools
+    model = OpenAIModel(model_id="gpt-4o-mini")
+    agent = Agent(model=model, tools=[mcp_client])
+    
+    print("Chatbot started! Type 'quit' to exit.")
+    
+    while True:
+        user_input = input("\nYou: ").strip()
+        
+        if user_input.lower() in ['quit', 'exit', 'bye']:
+            print("Goodbye!")
+            break
+            
+        if not user_input:
+            continue
+            
+        try:
+            response = agent(user_input)
+            print(f"Bot: {response}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
+```
+
+This example uses the [Strands](https://github.com/plastic-labs/strands) framework, but Context Lens works with any MCP client library.
 
 ---
 
