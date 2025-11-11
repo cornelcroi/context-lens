@@ -22,7 +22,9 @@ class TestDatabaseConfig:
     def test_default_values(self):
         """Test default configuration values."""
         config = DatabaseConfig()
-        assert config.path == "./knowledge_base.db"
+        # Path should use platform-specific directory
+        assert "context-lens" in config.path
+        assert "knowledge_base.db" in config.path
         assert config.table_prefix == "kb_"
 
     def test_validation_success(self):
@@ -51,7 +53,9 @@ class TestEmbeddingConfig:
         config = EmbeddingConfig()
         assert config.model == "sentence-transformers/all-MiniLM-L6-v2"
         assert config.batch_size == 32
-        assert config.cache_dir == "./models"
+        # Cache dir should use platform-specific directory
+        assert "context-lens" in config.cache_dir
+        assert "models" in config.cache_dir
 
     def test_validation_success(self):
         """Test successful validation."""
@@ -153,10 +157,15 @@ class TestConfig:
         ]
         for var in env_vars:
             os.environ.pop(var, None)
+        
+        # Also clear CONTEXT_LENS_HOME to ensure platform defaults
+        os.environ.pop("CONTEXT_LENS_HOME", None)
 
         config = Config.from_env()
 
-        assert config.database.path == "./knowledge_base.db"
+        # Path should use platform-specific directory
+        assert "context-lens" in config.database.path
+        assert "knowledge_base.db" in config.database.path
         assert config.embedding.model == "sentence-transformers/all-MiniLM-L6-v2"
         assert config.processing.chunk_size == 1000
         assert config.server.name == "knowledge-base"
