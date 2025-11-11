@@ -285,11 +285,17 @@ knowledge_base.db/
 ### Local-First Architecture
 
 **Everything stays local:**
-- ✅ All data stored on your machine
+- ✅ All data stored on your machine in platform-specific directories
 - ✅ All processing happens locally
 - ✅ No external API calls
 - ✅ No telemetry or tracking
 - ✅ No internet required (after setup)
+
+**Data Storage Locations:**
+- **macOS**: `~/Library/Application Support/context-lens/`
+- **Linux**: `~/.local/share/context-lens/`
+- **Windows**: `%LOCALAPPDATA%\context-lens\`
+- **Custom**: Set `CONTEXT_LENS_HOME` environment variable
 
 **What gets downloaded:**
 - Embedding model (~100MB, one-time)

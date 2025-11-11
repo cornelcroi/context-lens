@@ -310,7 +310,27 @@ The embedding model (~100MB) downloads on first use. This only happens once.
 No! Context Lens runs completely locally. No API keys, no cloud services.
 
 **Where is my data stored?**  
-Everything is stored locally in `knowledge_base.db`. You can change this location.
+Context-Lens stores data in platform-specific directories:
+- **macOS**: `~/Library/Application Support/context-lens/`
+- **Linux**: `~/.local/share/context-lens/`
+- **Windows**: `%LOCALAPPDATA%\context-lens\`
+
+You can change the base directory by setting `CONTEXT_LENS_HOME` environment variable:
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"],
+      "env": {
+        "CONTEXT_LENS_HOME": "/path/to/your/data"
+      }
+    }
+  }
+}
+```
+
+Or override individual paths with `LANCE_DB_PATH` (database) and `EMBEDDING_CACHE_DIR` (models).
 
 **Can I use this with private code?**  
 Yes! All processing happens locally. Nothing is sent to external services.

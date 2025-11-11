@@ -42,9 +42,14 @@ No! Context Lens runs completely locally. No API keys, no cloud services, no sub
 
 ### Where is my data stored?
 
-Everything is stored locally in `knowledge_base.db` in your current directory. You can change this location via configuration.
+Context-Lens stores data in platform-specific directories:
+- **macOS**: `~/Library/Application Support/context-lens/`
+- **Linux**: `~/.local/share/context-lens/`
+- **Windows**: `%LOCALAPPDATA%\context-lens\`
 
-See [SETUP.md](SETUP.md#custom-database-location) for details.
+You can change this location using the `CONTEXT_LENS_HOME` environment variable.
+
+See [SETUP.md](SETUP.md#custom-data-location) for details.
 
 ---
 
@@ -166,18 +171,34 @@ This usually means something is writing to stdout when it shouldn't. The server 
 
 **Check database location:**
 ```bash
-ls -la knowledge_base.db
+# On macOS
+ls -la ~/Library/Application\ Support/context-lens/knowledge_base.db
+
+# On Linux
+ls -la ~/.local/share/context-lens/knowledge_base.db
+
+# Or if you set CONTEXT_LENS_HOME
+ls -la $CONTEXT_LENS_HOME/knowledge_base.db
 ```
 
 **If corrupted, reset it:**
 ```bash
-rm -rf knowledge_base.db
+# On macOS
+rm -rf ~/Library/Application\ Support/context-lens/knowledge_base.db
+
+# On Linux
+rm -rf ~/.local/share/context-lens/knowledge_base.db
+
 # The server will create a new database on next run
 ```
 
 **Backup before resetting:**
 ```bash
-cp knowledge_base.db knowledge_base.db.backup
+# On macOS
+cp ~/Library/Application\ Support/context-lens/knowledge_base.db ~/knowledge_base.db.backup
+
+# On Linux
+cp ~/.local/share/context-lens/knowledge_base.db ~/knowledge_base.db.backup
 ```
 
 ---
@@ -186,7 +207,11 @@ cp knowledge_base.db knowledge_base.db.backup
 
 **Check database size:**
 ```bash
-du -h knowledge_base.db
+# On macOS
+du -h ~/Library/Application\ Support/context-lens/knowledge_base.db
+
+# On Linux
+du -h ~/.local/share/context-lens/knowledge_base.db
 ```
 
 **Solutions:**
@@ -206,14 +231,14 @@ du -h knowledge_base.db
 
 **Solutions:**
 ```bash
-# Check permissions
-ls -la knowledge_base.db
+# Check permissions (macOS)
+ls -la ~/Library/Application\ Support/context-lens/knowledge_base.db
 
 # Check disk space
 df -h
 
-# Check for locks
-lsof knowledge_base.db
+# Check for locks (macOS)
+lsof ~/Library/Application\ Support/context-lens/knowledge_base.db
 ```
 
 ---
@@ -309,7 +334,7 @@ env | grep MCP
       "command": "uvx",
       "args": ["context-lens"],
       "env": {
-        "LANCE_DB_PATH": "./my_db.db"
+        "CONTEXT_LENS_HOME": "/path/to/your/data"
       }
     }
   }

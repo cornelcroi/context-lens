@@ -187,22 +187,17 @@ This example uses the [Strands](https://github.com/plastic-labs/strands) framewo
 
 ## Configuration Options
 
-### Custom Database Location
+### Custom Data Location
 
-Specify a custom location for your knowledge base:
+By default, Context-Lens stores data in platform-specific directories:
+- **macOS**: `~/Library/Application Support/context-lens/`
+- **Linux**: `~/.local/share/context-lens/`
+- **Windows**: `%LOCALAPPDATA%\context-lens\`
 
-```json
-{
-  "mcpServers": {
-    "context-lens": {
-      "command": "uvx",
-      "args": ["context-lens", "--db-path", "./my_knowledge_base.db"]
-    }
-  }
-}
-```
+**Option 1: Set base directory for all data**
 
-Or using environment variables:
+Use `CONTEXT_LENS_HOME` to set a single location for everything:
+
 ```json
 {
   "mcpServers": {
@@ -210,7 +205,30 @@ Or using environment variables:
       "command": "uvx",
       "args": ["context-lens"],
       "env": {
-        "LANCE_DB_PATH": "./my_knowledge_base.db"
+        "CONTEXT_LENS_HOME": "/path/to/your/data"
+      }
+    }
+  }
+}
+```
+
+This will store:
+- Database: `/path/to/your/data/knowledge_base.db`
+- Models: `/path/to/your/data/models/`
+
+**Option 2: Set individual paths**
+
+For fine-grained control, use specific environment variables:
+
+```json
+{
+  "mcpServers": {
+    "context-lens": {
+      "command": "uvx",
+      "args": ["context-lens"],
+      "env": {
+        "LANCE_DB_PATH": "/path/to/database.db",
+        "EMBEDDING_CACHE_DIR": "/path/to/models"
       }
     }
   }
@@ -225,7 +243,7 @@ Context Lens supports various CLI parameters for customization:
 
 **Available Options:**
 - `--config PATH` - Path to YAML configuration file
-- `--db-path PATH` - Path to LanceDB database (default: `./knowledge_base.db`)
+- `--db-path PATH` - Path to LanceDB database (overrides default location)
 - `--log-level LEVEL` - Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
 - `--show-config` - Display current configuration and exit
 - `--version` - Show version information
@@ -240,7 +258,6 @@ Context Lens supports various CLI parameters for customization:
       "args": [
         "context-lens",
         "--config", "/path/to/config.yaml",
-        "--db-path", "/path/to/knowledge_base.db",
         "--log-level", "DEBUG"
       ]
     }
@@ -261,13 +278,11 @@ All configuration can be set via environment variables:
       "command": "uvx",
       "args": ["context-lens"],
       "env": {
-        "LANCE_DB_PATH": "/path/to/knowledge_base.db",
-        "LANCE_DB_TABLE_PREFIX": "kb_",
+        "CONTEXT_LENS_HOME": "/path/to/your/data",
         "LOG_LEVEL": "DEBUG",
         "MCP_SERVER_NAME": "my-knowledge-base",
         "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2",
         "EMBEDDING_BATCH_SIZE": "32",
-        "EMBEDDING_CACHE_DIR": "./models",
         "MAX_FILE_SIZE_MB": "10",
         "CHUNK_SIZE": "1000",
         "CHUNK_OVERLAP": "200",
@@ -282,17 +297,23 @@ All configuration can be set via environment variables:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LANCE_DB_PATH` | `./knowledge_base.db` | Path to LanceDB database |
+| `CONTEXT_LENS_HOME` | Platform-specific (see above) | Base directory for all Context-Lens data |
+| `LANCE_DB_PATH` | `$CONTEXT_LENS_HOME/knowledge_base.db` | Path to LanceDB database |
+| `EMBEDDING_CACHE_DIR` | `$CONTEXT_LENS_HOME/models` | Directory to cache embedding models |
 | `LANCE_DB_TABLE_PREFIX` | `kb_` | Prefix for database tables |
 | `LOG_LEVEL` | `INFO` | Logging level |
 | `MCP_SERVER_NAME` | `knowledge-base` | Server name for identification |
 | `EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Embedding model to use |
 | `EMBEDDING_BATCH_SIZE` | `32` | Batch size for embedding processing |
-| `EMBEDDING_CACHE_DIR` | `./models` | Directory to cache embedding models |
 | `MAX_FILE_SIZE_MB` | `10` | Maximum file size to process (MB) |
 | `CHUNK_SIZE` | `1000` | Text chunk size for processing |
 | `CHUNK_OVERLAP` | `200` | Overlap between text chunks |
 | `SUPPORTED_EXTENSIONS` | See [Technical Details](TECHNICAL.md) | Comma-separated list of file extensions |
+
+**Configuration Priority:**
+1. Individual environment variables (`LANCE_DB_PATH`, `EMBEDDING_CACHE_DIR`) - highest priority
+2. `CONTEXT_LENS_HOME` - sets base directory
+3. Platform defaults - uses OS-appropriate directories
 
 ---
 
@@ -302,13 +323,13 @@ Create a `config.yaml` file for complex setups:
 
 ```yaml
 database:
-  path: "./knowledge_base.db"
+  path: "/path/to/knowledge_base.db"  # Optional: defaults to platform-specific location
   table_prefix: "kb_"
 
 embedding:
   model: "sentence-transformers/all-MiniLM-L6-v2"
   batch_size: 32
-  cache_dir: "./models"
+  cache_dir: "/path/to/models"  # Optional: defaults to platform-specific location
 
 processing:
   max_file_size_mb: 10
@@ -373,8 +394,8 @@ On first use, `uvx` automatically:
 - Starts the server
 
 The server then:
-- Creates `knowledge_base.db` in your current directory
-- Stores logs in `./logs`
+- Creates database in platform-specific directory (see [Custom Data Location](#custom-data-location))
+- Downloads embedding model (~100MB, one-time)
 - Ready to use!
 
 **Zero configuration needed!**

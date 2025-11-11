@@ -46,6 +46,7 @@ dependencies = [
     "pyyaml>=6.0",
     "aiofiles>=23.0.0",
     "chardet>=5.0.0",
+    "platformdirs>=3.0.0",
 ]
 
 [project.optional-dependencies]

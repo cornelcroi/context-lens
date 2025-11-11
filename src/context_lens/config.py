@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import platformdirs
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,11 +15,22 @@ class ConfigurationError(Exception):
     """Exception raised for configuration errors."""
 
 
+def get_base_dir() -> Path:
+    """Get the base directory for Context-Lens data.
+    
+    Can be overridden with CONTEXT_LENS_HOME environment variable.
+    Otherwise uses platform-specific data directory.
+    """
+    if home := os.getenv("CONTEXT_LENS_HOME"):
+        return Path(home)
+    return Path(platformdirs.user_data_dir("context-lens"))
+
+
 @dataclass
 class DatabaseConfig:
     """Database configuration settings."""
 
-    path: str = "./knowledge_base.db"
+    path: str = str(get_base_dir() / "knowledge_base.db")
     table_prefix: str = "kb_"
 
     def validate(self) -> None:
@@ -42,7 +55,7 @@ class EmbeddingConfig:
 
     model: str = "sentence-transformers/all-MiniLM-L6-v2"
     batch_size: int = 32
-    cache_dir: str = "./models"
+    cache_dir: str = str(get_base_dir() / "models")
 
     def validate(self) -> None:
         """Validate embedding configuration."""
@@ -228,13 +241,19 @@ class Config:
 
             config = cls(
                 database=DatabaseConfig(
-                    path=os.getenv("LANCE_DB_PATH", "./knowledge_base.db"),
+                    path=os.getenv(
+                        "LANCE_DB_PATH",
+                        str(get_base_dir() / "knowledge_base.db")
+                    ),
                     table_prefix=os.getenv("LANCE_DB_TABLE_PREFIX", "kb_"),
                 ),
                 embedding=EmbeddingConfig(
                     model=os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"),
                     batch_size=batch_size,
-                    cache_dir=os.getenv("EMBEDDING_CACHE_DIR", "./models"),
+                    cache_dir=os.getenv(
+                        "EMBEDDING_CACHE_DIR",
+                        str(get_base_dir() / "models")
+                    ),
                 ),
                 processing=ProcessingConfig(
                     max_file_size_mb=max_file_size,
@@ -307,13 +326,19 @@ class Config:
             # Create configuration with explicit defaults
             config = cls(
                 database=DatabaseConfig(
-                    path=db_config.get("path", "./knowledge_base.db"),
+                    path=db_config.get(
+                        "path",
+                        str(get_base_dir() / "knowledge_base.db")
+                    ),
                     table_prefix=db_config.get("table_prefix", "kb_"),
                 ),
                 embedding=EmbeddingConfig(
                     model=emb_config.get("model", "sentence-transformers/all-MiniLM-L6-v2"),
                     batch_size=emb_config.get("batch_size", 32),
-                    cache_dir=emb_config.get("cache_dir", "./models"),
+                    cache_dir=emb_config.get(
+                        "cache_dir",
+                        str(get_base_dir() / "models")
+                    ),
                 ),
                 processing=ProcessingConfig(
                     max_file_size_mb=proc_config.get("max_file_size_mb", 10),
