@@ -35,6 +35,40 @@ Think of it as "SQLite for AI embeddings" - all the power of vector search witho
 - 📁 **Local & GitHub** - Index local files or public GitHub repositories
 - 🎯 **Smart Parsing** - Language-aware chunking for better results
 
+## Architecture
+
+![Context Lens Architecture](img/architecture.jpg)
+
+### How It Works
+
+When you add content to Context Lens, it doesn't just dump text into a database. Here's what actually happens:
+
+**Smart Reading:** Context Lens detects your file type and uses specialized parsers. Python files are analyzed with AST parsing, JSON is parsed structurally, Markdown is split by headers. This preserves the natural structure of your content.
+
+**Meaningful Chunks:** Instead of arbitrary character limits, content is chunked intelligently - complete functions, logical paragraphs, full sections. Your code never gets split mid-function.
+
+**Semantic Vectors:** Each chunk is converted to a 384-dimensional vector using a local embedding model. These vectors capture meaning, not just words. "authentication" and "login system" become similar vectors even though they share no words.
+
+**Local Storage:** Everything goes into LanceDB - a serverless vector database that's just a file on your disk. No cloud services, no API calls, completely private.
+
+**Conceptual Search:** When you ask a question, it becomes a vector too. Context Lens finds chunks with similar vectors (similar meaning) and ranks them by relevance. You get answers based on concepts, not keyword matching.
+
+### Technical Specifications
+
+| Component | Details |
+|-----------|---------|
+| **Embedding Model** | `sentence-transformers/all-MiniLM-L6-v2` |
+| **Vector Dimensions** | 384 dimensions |
+| **Model Size** | ~90MB (downloads on first use) |
+| **Chunk Size** | 1000 characters (default, configurable) |
+| **Chunk Overlap** | 200 characters (default, configurable) |
+| **Vector Database** | LanceDB (serverless, file-based) |
+| **Storage Format** | Apache Arrow columnar format |
+| **Search Method** | Cosine similarity |
+| **Processing** | 100% local, no external API calls |
+
+> 📖 **Want to customize?** See [SETUP.md](SETUP.md#advanced-configuration) for configuration options and [TECHNICAL.md](TECHNICAL.md) for performance benchmarks.
+
 ## Quick Setup
 
 ### Kiro IDE
@@ -87,25 +121,87 @@ For Claude Desktop, Continue.dev, or any MCP-compatible client:
 
 > 📖 **Need detailed setup instructions?** See [SETUP.md](SETUP.md) for all clients, programmatic usage, and configuration options.
 
-## Architecture
+## Programmatic Usage
 
-![Context Lens Architecture](img/architecture.jpg)
+Use Context Lens directly in your Python applications:
 
-### How It Works
+```python
+from mcp import StdioServerParameters, stdio_client
+from strands import Agent
+from strands.models.openai import OpenAIModel
+from strands.tools.mcp import MCPClient
 
+# Connect to Context Lens
+mcp_client = MCPClient(
+    lambda: stdio_client(
+        StdioServerParameters(command="uvx", args=["context-lens"])
+    )
+)
+
+# Create an agent with Context Lens tools
+agent = Agent(model=OpenAIModel(model_id="gpt-4o-mini"), tools=[mcp_client])
+
+# Index a GitHub repository
+agent("Add https://github.com/fastapi/fastapi to the knowledge base")
+
+# Ask questions about the code
+response = agent("How does FastAPI handle dependency injection?")
+print(response)
 ```
-1. 📄 Document Ingestion
-   └─ Read content → Generate hash → Extract metadata → Smart chunking
 
-2. 🧮 Vector Embedding
-   └─ Load model → Convert to 384-dim vectors → Batch processing
+> 📖 **Full examples:** See [SETUP.md](SETUP.md#programmatic-usage) for complete code and more frameworks.
 
-3. 🔍 Semantic Search
-   └─ Query to vector → Find similar → Rank by similarity → Return results
+## Quick Start
 
-4. 💾 Storage
-   └─ LanceDB: Fast columnar vector database, all data stays local
+### Add Your Project
 ```
+You: Add all Python files from ./src to the knowledge base
+LLM: ✓ Added 23 Python files with 156 chunks
+
+You: How does the authentication system work?
+LLM: The authentication system uses JWT tokens. The login flow starts in 
+     auth/login.py where credentials are validated, then a token is generated
+     with the user's ID and expiration time...
+
+You: Show me all the database models
+LLM: Based on the codebase, here are the main database models:
+     1. User model (models/user.py) - handles user accounts and authentication
+     2. Post model (models/post.py) - manages blog posts with relationships...
+```
+
+### Learn from Open Source
+```
+You: Add https://github.com/fastapi/fastapi to the knowledge base
+LLM: ✓ Added 247 files from repository with 1,543 chunks
+
+You: How does FastAPI handle dependency injection?
+LLM: FastAPI uses a sophisticated dependency injection system. The Depends()
+     function in fastapi/dependencies.py analyzes function signatures and
+     automatically resolves dependencies. Here's how it works...
+
+You: Compare FastAPI's routing to Flask
+LLM: FastAPI uses decorator-based routing similar to Flask, but with key
+     differences: 1) Type hints for automatic validation, 2) Async support
+     built-in, 3) Automatic OpenAPI documentation generation...
+```
+
+### Analyze Documents
+```
+You: Add all contracts from ./legal/contracts
+LLM: ✓ Added 12 contract documents with 487 chunks
+
+You: Find all termination clauses
+LLM: I found termination clauses in 8 contracts. Here's a summary:
+     - Service Agreement: 30-day notice required for either party
+     - Vendor Contract: Immediate termination for breach of confidentiality...
+
+You: What are the payment terms across all contracts?
+LLM: Payment terms vary by contract type:
+     - Service contracts: Net 30 days from invoice date
+     - Vendor agreements: 50% upfront, 50% on delivery...
+```
+
+> 📖 **More examples and query patterns:** [USAGE_GUIDE.md](USAGE_GUIDE.md)
 
 ## Smart Parsing & Chunking
 
@@ -156,53 +252,6 @@ Examples:
 - **🧹 clear_knowledge_base** - Remove all documents
 
 > 📖 **See detailed examples:** [USAGE_GUIDE.md](USAGE_GUIDE.md#available-tools)
-
-## Quick Start
-
-### Add Your Project
-```
-You: Add all Python files from ./src to the knowledge base
-LLM: ✓ Added 23 Python files with 156 chunks
-```
-
-### Learn from Open Source
-```
-You: Add https://github.com/fastapi/fastapi to the knowledge base
-LLM: ✓ Added 247 files from repository with 1,543 chunks
-
-You: How does FastAPI handle dependency injection?
-LLM: [Searches and explains based on actual source code]
-```
-
-### Analyze Documents
-```
-You: Add all contracts from ./legal/contracts
-LLM: ✓ Added 12 contract documents with 487 chunks
-
-You: Find all termination clauses
-LLM: [Searches and summarizes termination terms]
-```
-
-> 📖 **More examples:** [USAGE_GUIDE.md](USAGE_GUIDE.md#quick-start-examples)
-
-## Example Queries
-
-**Code Understanding:**
-- "How does this project handle database connections?"
-- "Explain the authentication flow"
-- "Find similar error handling patterns"
-
-**Document Analysis:**
-- "Find all liability clauses in these contracts"
-- "What are the coverage exclusions?"
-- "Summarize the payment terms"
-
-**Learning:**
-- "How does FastAPI implement dependency injection?"
-- "Show me examples of async/await usage"
-- "Compare how Django and Flask handle routing"
-
-> 📖 **100+ query examples:** [USAGE_GUIDE.md](USAGE_GUIDE.md#example-queries)
 
 ## FAQ
 
