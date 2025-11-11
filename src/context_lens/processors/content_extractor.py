@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 from ..models.data_models import DocumentChunk, DocumentMetadata
+from ..parsers import ParsingError, get_parser_registry
 from .file_readers import FileProcessingError, FileReaderFactory
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,7 @@ class ContentExtractor:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.file_reader_factory = FileReaderFactory()
+        self.parser_registry = get_parser_registry()
 
     def extract_and_chunk(self, file_path: str) -> Tuple[DocumentMetadata, List[DocumentChunk]]:
         """Extract content from file and create chunks.
@@ -51,8 +53,8 @@ class ContentExtractor:
             # Get file stats
             file_stats = path.stat()
 
-            # Create chunks
-            chunks = self._create_chunks(content, doc_id, file_path)
+            # Create chunks using parser registry
+            chunks = self._create_chunks_with_parser(content, doc_id, file_path)
 
             logger.info(f"Created {len(chunks)} chunks from {file_path}")
 
@@ -82,8 +84,57 @@ class ContentExtractor:
                 details={"file_path": file_path, "error": str(e)},
             )
 
+    def _create_chunks_with_parser(
+        self, content: str, document_id: str, file_path: str
+    ) -> List[DocumentChunk]:
+        """Create chunks using language-specific parser from registry.
+
+        Args:
+            content: File content to chunk
+            document_id: Document ID
+            file_path: Path to the file
+
+        Returns:
+            List of document chunks
+        """
+        try:
+            # Get appropriate parser from registry
+            parser = self.parser_registry.get_parser(
+                file_path, chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
+            )
+
+            # Parse content into code units
+            code_units = parser.parse(content, file_path)
+
+            # Convert code units to chunks
+            chunks = parser.chunk(code_units, document_id)
+
+            logger.debug(
+                f"Used {parser.__class__.__name__} to create {len(chunks)} chunks from {file_path}"
+            )
+
+            return chunks
+
+        except ParsingError as e:
+            # If parsing fails, fall back to old chunking method
+            logger.warning(
+                f"Parser failed for {file_path}: {e}. Falling back to legacy chunking."
+            )
+            parser_name = parser.__class__.__name__ if "parser" in locals() else "Unknown"
+            self.parser_registry.record_fallback(parser_name)
+            return self._create_chunks(content, document_id, file_path)
+        except Exception as e:
+            # Unexpected error - fall back to legacy chunking
+            logger.error(
+                f"Unexpected error in parser for {file_path}: {e}. Falling back to legacy chunking."
+            )
+            return self._create_chunks(content, document_id, file_path)
+
     def _create_chunks(self, content: str, document_id: str, file_path: str) -> List[DocumentChunk]:
-        """Create chunks from content based on file type."""
+        """Create chunks from content based on file type (legacy method).
+
+        This is kept as a fallback when parser registry fails.
+        """
         path = Path(file_path)
 
         if path.suffix.lower() == ".py":

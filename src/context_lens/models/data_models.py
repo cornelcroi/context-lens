@@ -28,6 +28,7 @@ class DocumentChunk:
     content: str
     chunk_index: int
     embedding: List[float]
+    metadata: Optional[dict] = None
 
 
 @dataclass

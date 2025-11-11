@@ -9,11 +9,11 @@
 
 ## What is Context Lens?
 
-Context Lens is a self-contained Model Context Protocol (MCP) server with built-in serverless vector storage (LanceDB) that brings semantic search to your AI assistant. Point it at any codebase, documentation, or text files - local or on GitHub - and your AI can instantly understand and answer questions about the content.
+Context Lens is a self-contained Model Context Protocol (MCP) server with built-in serverless vector storage (LanceDB) that brings semantic search to your AI assistant. Point it at any content - codebases, documentation, contracts, legal documents, research papers, or any text files - and your AI can instantly understand and answer questions about the content.
 
-**Traditional keyword search** finds files containing specific words. Miss the exact term? Miss the code.
+**Traditional keyword search** finds files containing specific words. Miss the exact term? Miss the content.
 
-**Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication."
+**Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication." Ask about "liability clauses" in contracts and find sections about indemnification, warranties, and limitations of liability.
 
 ## Why LanceDB?
 
@@ -58,11 +58,19 @@ Think of it as "SQLite for AI embeddings" - all the power of vector search witho
 
 ### Perfect For
 
-- 🔍 **Code discovery** - "How does this project handle database connections?"
-- 📚 **Learning** - Add React's source code and ask "How do hooks work internally?"
-- 🐛 **Debugging** - "Find similar error handling patterns in this codebase"
+**Software Development:**
+- � ***Code discovery** - "How does this project handle database connections?"
+- � **Lebarning** - Add React's source code and ask "How do hooks work internally?"
+- � **Debougging** - "Find similar error handling patterns in this codebase"
 - 👥 **Onboarding** - Help new team members understand your architecture
 - ♻️ **Refactoring** - "Where else do we use this deprecated pattern?"
+
+**Document Analysis:**
+- 📄 **Legal & Contracts** - "Find all liability clauses in these contracts"
+- 🏥 **Insurance Documents** - "What are the coverage exclusions across all policies?"
+- 📊 **Research Papers** - "Find studies about machine learning in healthcare"
+- 📚 **Technical Documentation** - "How do I configure SSL in this system?"
+- 📝 **Business Documents** - "Find all references to pricing terms"
 
 ## Setup with Your LLM
 
@@ -228,15 +236,22 @@ Or using environment variables:
 
 Context Lens works with any text-based content:
 
-- **📄 Single files**: `./README.md`, `/path/to/document.txt`
-- **📁 Local folders**: `./docs/`, `/path/to/project/`
+**Code & Development:**
+- **� Sinagle files**: `./README.md`, `/path/to/script.py`
+- **�  Local folders**: `./src/`, `/path/to/project/`
 - **💻 Local repositories**: `./my-project/`, `/Users/you/code/app/`
 - **🌐 GitHub URLs**: 
   - Repositories: `https://github.com/user/repo`
   - Specific files: `https://github.com/user/repo/blob/main/file.py`
   - Directories: `https://github.com/user/repo/tree/main/src`
-- **📚 Documentation sites**: Any markdown, text, or code files
-- **📝 Notes and wikis**: Personal knowledge bases, team wikis
+
+**Documents & Content:**
+- **📄 Legal Documents**: Contracts, agreements, terms of service
+- **🏥 Insurance Policies**: Coverage documents, policy terms, claims procedures
+- **📊 Research Papers**: Academic papers, technical reports, whitepapers
+- **📚 Documentation**: Technical docs, user manuals, API documentation
+- **📝 Business Documents**: Proposals, reports, meeting notes, wikis
+- **📋 Text Files**: Any `.txt`, `.md`, `.pdf` (text-based), or plain text content
 
 ## Architecture
 
@@ -432,7 +447,7 @@ LLM: [Provides detailed explanation with code references]
 
 Once you've added documents, here are powerful queries you can ask:
 
-### 🔍 Understanding Code
+### � UCode Understanding
 ```
 "How does this codebase handle database connections?"
 "Explain the authentication flow in this project"
@@ -441,7 +456,16 @@ Once you've added documents, here are powerful queries you can ask:
 "Show me how the API endpoints are structured"
 ```
 
-### 🐛 Debugging & Problem Solving
+### � Docuument Analysis
+```
+"Find all liability clauses in these contracts"
+"What are the termination conditions across all agreements?"
+"Summarize the coverage exclusions in these insurance policies"
+"Find all references to payment terms and pricing"
+"What are the data privacy requirements mentioned in these documents?"
+```
+
+### � Debuggin g & Problem Solving
 ```
 "Find examples of how to handle file uploads"
 "Where is the rate limiting logic implemented?"
@@ -459,6 +483,15 @@ Once you've added documents, here are powerful queries you can ask:
 "How does this library handle backwards compatibility?"
 ```
 
+### � Buesiness & Legal Documents
+```
+"Find all force majeure clauses in these contracts"
+"What are the warranty terms across all vendor agreements?"
+"Summarize the compliance requirements in these policies"
+"Find references to intellectual property rights"
+"What are the renewal terms in these service agreements?"
+```
+
 ### ♻️ Refactoring & Code Review
 ```
 "Find all files that use the old authentication method"
@@ -466,15 +499,6 @@ Once you've added documents, here are powerful queries you can ask:
 "Show me similar code that might have the same bug"
 "Find duplicate logic that could be refactored"
 "What files would be affected if I change this interface?"
-```
-
-### 🎯 Specific Implementation Questions
-```
-"How do I use the caching system in this project?"
-"Show me examples of writing tests for API endpoints"
-"How is configuration managed in this codebase?"
-"Find examples of custom middleware implementation"
-"How do I add a new database model?"
 ```
 
 ### 🌟 Open Source Exploration
@@ -489,15 +513,41 @@ Once you've added documents, here are powerful queries you can ask:
 ### 💡 Tips for Better Queries
 
 **✅ Good Queries:**
-- Be specific: "How does FastAPI validate request bodies?"
-- Ask about concepts: "Explain the middleware pattern in this code"
-- Request examples: "Show me examples of async database queries"
-- Compare: "How is this different from the old implementation?"
+- Be specific: "How does FastAPI validate request bodies?" or "Find indemnification clauses"
+- Ask about concepts: "Explain the middleware pattern" or "What are the liability terms?"
+- Request examples: "Show me async database queries" or "Find payment terms examples"
+- Compare: "How is this different from the old implementation?" or "Compare warranty terms"
 
 **❌ Avoid:**
-- Too vague: "Tell me about the code"
+- Too vague: "Tell me about the code" or "Tell me about the documents"
 - Too broad: "Explain everything"
-- Outside scope: Questions about code not in the knowledge base
+- Outside scope: Questions about content not in the knowledge base
+
+### 📋 Document Analysis Use Cases
+
+**Legal & Contracts:**
+- Review multiple contracts to find specific clauses
+- Compare terms across different agreements
+- Identify potential risks or missing provisions
+- Extract key dates, parties, and obligations
+
+**Insurance & Healthcare:**
+- Understand coverage terms and exclusions
+- Find claim procedures and requirements
+- Compare policies from different providers
+- Identify gaps in coverage
+
+**Research & Academia:**
+- Find relevant studies on specific topics
+- Compare methodologies across papers
+- Extract key findings and conclusions
+- Identify research gaps
+
+**Business Operations:**
+- Search through meeting notes and decisions
+- Find project requirements and specifications
+- Review proposals and RFPs
+- Analyze reports and documentation
 
 ## Advanced Configuration
 
@@ -673,6 +723,35 @@ The server then:
 - Supports `.py` and `.txt` files by default
 
 **Zero configuration needed!**
+
+## Smart Parsing & Chunking
+
+Context Lens doesn't just split text blindly - it understands code structure and creates intelligent chunks that respect language boundaries and preserve context.
+
+**The difference:** Generic chunking splits code arbitrarily by character count, often breaking functions mid-way. Smart parsing understands your code's structure and creates complete, meaningful chunks - a Python function stays together, a JSON object remains valid, a Markdown section keeps its code blocks.
+
+### Supported File Types
+
+Context Lens includes **7 specialized parsers** for different languages and formats:
+
+- **🐍 Python** (`.py`, `.pyw`) - Functions, classes, imports
+- **⚡ JavaScript/TypeScript** (`.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`) - Functions, classes, imports
+- **📦 JSON** (`.json`, `.jsonc`) - Top-level keys, nested objects
+- **📋 YAML** (`.yaml`, `.yml`) - Top-level keys, lists, mappings
+- **📝 Markdown** (`.md`, `.markdown`, `.mdx`) - Header hierarchy, code blocks
+- **🦀 Rust** (`.rs`) - Structs, traits, impl blocks, functions
+- **📄 Other Files** (`.txt`, `.log`, `.cpp`, `.java`, etc.) - Intelligent paragraph/sentence splitting
+
+### Why Smart Parsing Matters
+
+✅ **Complete Code Units** - Never splits a function or class in the middle  
+✅ **Preserved Context** - Docstrings, comments, and structure stay intact  
+✅ **Better Search Results** - Find complete, understandable code snippets  
+✅ **Language-Aware** - Understands Python classes, Rust traits, JSON structure  
+✅ **Automatic Detection** - No configuration needed, works based on file extension  
+✅ **Rich Metadata** - Each chunk includes function names, types, line numbers  
+
+> 📖 **Want to see how it works?** Check out [PARSING_EXAMPLES.md](PARSING_EXAMPLES.md) for detailed examples and code samples showing how each parser works.
 
 ## Why Use This?
 
