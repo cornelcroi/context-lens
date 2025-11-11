@@ -15,6 +15,14 @@ Context Lens is a self-contained Model Context Protocol (MCP) server with built-
 
 **Context Lens** understands meaning. Ask about "authentication" and find code about login, credentials, tokens, OAuth, and access control - even if those files never use the word "authentication."
 
+## See It In Action
+
+Want to understand how Context-Lens works? Here's the fun part: you can use Context-Lens to learn about Context-Lens.
+
+![Context-Lens Demo](img/demo.gif)
+
+*Demo: Using Claude Desktop with Context-Lens to index and query this repository itself. No git clone, no scrolling through code - just questions and answers.*
+
 ## Why LanceDB?
 
 Context Lens uses **LanceDB** - a modern, serverless vector database:
