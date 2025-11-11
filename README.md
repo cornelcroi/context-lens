@@ -46,7 +46,7 @@ Think of it as "SQLite for AI embeddings" - all the power of vector search witho
 
 ## Architecture
 
-![Context Lens Architecture](img/architecture.jpg)
+![Context Lens Architecture](https://raw.githubusercontent.com/cornelcroi/context-lens/main/img/architecture.jpg)
 
 ### How It Works
 
