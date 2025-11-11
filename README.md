@@ -126,27 +126,58 @@ For Claude Desktop, Continue.dev, or any MCP-compatible client:
 Use Context Lens directly in your Python applications:
 
 ```python
+#!/usr/bin/env python3
+import os
+from dotenv import load_dotenv
 from mcp import StdioServerParameters, stdio_client
 from strands import Agent
 from strands.models.openai import OpenAIModel
 from strands.tools.mcp import MCPClient
 
-# Connect to Context Lens
-mcp_client = MCPClient(
-    lambda: stdio_client(
-        StdioServerParameters(command="uvx", args=["context-lens"])
+def main():
+    # Load environment variables from .env file
+    load_dotenv()
+    
+    # Create MCP client for context-lens server
+    mcp_client = MCPClient(
+        lambda: stdio_client(
+            StdioServerParameters(command="uvx", args=["context-lens"])
+        )
     )
-)
+    
+    # Create an agent with OpenAI model and MCP tools
+    model = OpenAIModel(model_id="gpt-4o-mini")
+    agent = Agent(model=model, tools=[mcp_client])
+    
+    print("Chatbot started! Type 'quit' to exit.")
+    
+    while True:
+        user_input = input("\nYou: ").strip()
+        
+        if user_input.lower() in ['quit', 'exit', 'bye']:
+            print("Goodbye!")
+            break
+            
+        if not user_input:
+            continue
+            
+        try:
+            response = agent(user_input)
+            print(f"Bot: {response}")
+        except Exception as e:
+            print(f"Error: {e}")
 
-# Create an agent with Context Lens tools
-agent = Agent(model=OpenAIModel(model_id="gpt-4o-mini"), tools=[mcp_client])
+if __name__ == "__main__":
+    main()
+```
 
-# Index a GitHub repository
-agent("Add https://github.com/fastapi/fastapi to the knowledge base")
+**Example conversation:**
+```
+You: Add https://github.com/fastapi/fastapi to the knowledge base
+Bot: ✓ Added 247 files from repository with 1,543 chunks
 
-# Ask questions about the code
-response = agent("How does FastAPI handle dependency injection?")
-print(response)
+You: How does FastAPI handle dependency injection?
+Bot: FastAPI uses a sophisticated dependency injection system...
 ```
 
 > 📖 **Full examples:** See [SETUP.md](SETUP.md#programmatic-usage) for complete code and more frameworks.
