@@ -77,15 +77,6 @@ Technical documentation about Context Lens's architecture, implementation, and p
 - **Search**: Approximate Nearest Neighbor (ANN) with cosine similarity
 - **Storage**: Columnar format with [Apache Arrow](https://arrow.apache.org/)
 
-### Python Dependencies
-
-- **lancedb** - Vector database
-- **sentence-transformers** - Embedding models
-- **torch** - PyTorch for model inference
-- **fastmcp** - MCP server framework
-- **pydantic** - Data validation
-- **gitpython** - GitHub repository cloning
-- **pyyaml** - Configuration files
 
 ### Embedding Model
 
@@ -105,44 +96,6 @@ Technical documentation about Context Lens's architecture, implementation, and p
 - Widely used and tested
 - Works well for code and text
 
----
-
-## Performance
-
-### Benchmarks
-
-**Embedding Speed:**
-- ~1000 tokens/second on CPU
-- ~5000 tokens/second on GPU (if available)
-- Batch processing for efficiency
-
-**Search Latency:**
-- <100ms for most queries
-- <50ms for small databases (<10k chunks)
-- <200ms for large databases (>100k chunks)
-
-**Storage Efficiency:**
-- ~1KB per chunk (text + vector + metadata)
-- Columnar storage reduces disk usage
-- Efficient compression
-
-**Memory Usage:**
-- ~500MB for embedding model
-- ~100MB for LanceDB operations
-- Scales with database size
-
-### Scalability
-
-**Tested with:**
-- ✅ Single files up to 10MB
-- ✅ Repositories with 1000+ files
-- ✅ Databases with 100k+ chunks
-- ✅ Concurrent searches
-
-**Limits:**
-- Max file size: 10MB (configurable)
-- Max chunk size: 10,000 characters
-- Max search results: 100 per query
 
 ---
 
@@ -308,33 +261,6 @@ knowledge_base.db/
 - Search queries
 - Database contents
 
-### Data Protection
-
-**File System:**
-- Database stored in current directory
-- Standard file permissions apply
-- Easy to backup and encrypt
-- Can be moved/deleted anytime
-
-**No Cloud Dependencies:**
-- No AWS, GCP, or Azure required
-- No API keys needed
-- No subscriptions
-- No vendor lock-in
-
-### Recommended Practices
-
-**For sensitive data:**
-- Store database in encrypted directory
-- Use full disk encryption
-- Regular backups
-- Restrict file permissions
-
-**For team sharing (future):**
-- Use encrypted S3 buckets
-- VPN for remote access
-- Access control lists
-- Audit logging
 
 ---
 
@@ -376,13 +302,6 @@ context-lens/
 └── pyproject.toml            # Project config
 ```
 
-### Testing
-
-**Test Coverage:**
-- 398 tests (all passing)
-- Unit tests for all parsers
-- Integration tests
-- End-to-end tests
 
 **Run tests:**
 ```bash
@@ -392,12 +311,3 @@ pytest -v                      # Verbose output
 pytest --cov                   # With coverage
 ```
 
----
-
-## Additional Resources
-
-- 📖 [Setup Guide](SETUP.md) - Configuration details
-- 📚 [Usage Guide](USAGE_GUIDE.md) - How to use effectively
-- 🎨 [Parsing Examples](PARSING_EXAMPLES.md) - Parser examples
-- 🔧 [Troubleshooting](TROUBLESHOOTING.md) - Common issues
-- 🤝 [Contributing](CONTRIBUTING.md) - How to contribute
