@@ -19,7 +19,8 @@ Context Lens is a self-contained Model Context Protocol (MCP) server with built-
 
 Want to understand how Context-Lens works? Here's the fun part: you can use Context-Lens to learn about Context-Lens.
 
-![Context-Lens Demo](img/demo.gif)
+![Context-Lens Demo](https://raw.githubusercontent.com/cornelcroi/context-lens/main/img/demo.gif)
+
 
 *Demo: Using Claude Desktop with Context-Lens to index and query this repository itself. No git clone, no scrolling through code - just questions and answers.*
 
