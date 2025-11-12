@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 class ContentExtractor:
     """Extracts and chunks content for embedding generation."""
 
-    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 200):
+    def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 200, max_file_size_mb: int = 10):
         """Initialize content extractor with chunking parameters."""
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
-        self.file_reader_factory = FileReaderFactory()
+        self.max_file_size_mb = max_file_size_mb
+        self.file_reader_factory = FileReaderFactory(max_file_size_mb=max_file_size_mb)
         self.parser_registry = get_parser_registry()
 
     def extract_and_chunk(self, file_path: str) -> Tuple[DocumentMetadata, List[DocumentChunk]]:

@@ -278,14 +278,23 @@ Context Lens doesn't just split text blindly - it understands code structure and
 
 ## What You Can Add
 
+Context Lens works with text-based files from multiple sources:
+
 - **📁 Local files & folders** - Your projects, documentation, any text files
 - **🌐 GitHub repositories** - Public repos, specific branches, directories, or files
+- **🔗 Direct file URLs** - Any HTTP/HTTPS accessible file
 - **📄 Documents** - Contracts, policies, research papers, technical docs
 
-Examples:
+**Supported file types:** `.py`, `.js`, `.ts`, `.java`, `.cpp`, `.go`, `.rs`, `.rb`, `.php`, `.json`, `.yaml`, `.md`, `.txt`, `.sh`, and more (25+ extensions)
+
+**Maximum file size:** 10 MB (configurable via `MAX_FILE_SIZE_MB` environment variable)
+
+**Examples:**
 - `./src/` - Local directory
+- `/path/to/file.py` - Single local file
 - `https://github.com/fastapi/fastapi` - Entire repository
 - `https://github.com/django/django/tree/main/django/contrib/auth` - Specific directory
+- `https://example.com/config.yaml` - Direct file URL
 - `/path/to/contracts/` - Legal documents
 
 > 📖 **See more examples:** [USAGE_GUIDE.md](USAGE_GUIDE.md)

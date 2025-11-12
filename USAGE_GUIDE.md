@@ -9,6 +9,7 @@ Complete guide for using Context Lens effectively with examples, queries, and be
 - [Example Conversations](#example-conversations)
 - [Example Queries](#example-queries)
 - [Quick Start Examples](#quick-start-examples)
+- [Error Handling](#error-handling)
 - [Tips for Better Queries](#tips-for-better-queries)
 
 ---
@@ -27,6 +28,10 @@ Context Lens works with any text-based content:
   - Specific files: `https://github.com/user/repo/blob/main/file.py`
   - Directories: `https://github.com/user/repo/tree/main/src`
   - Specific branches: `https://github.com/user/repo/tree/develop`
+- **🔗 Direct file URLs**:
+  - Any HTTP/HTTPS file: `https://example.com/config.yaml`
+  - CDN files: `https://cdn.example.com/data.json`
+  - Raw files: `https://example.com/api/schema.json`
 
 ### Documents & Content
 
@@ -39,17 +44,33 @@ Context Lens works with any text-based content:
 
 ### Supported File Types
 
+Context Lens supports the following file extensions:
+
 **Programming Languages:**
-- Python (`.py`), JavaScript/TypeScript (`.js`, `.jsx`, `.ts`, `.tsx`)
-- Java (`.java`), C/C++ (`.cpp`, `.c`, `.h`)
-- Go (`.go`), Rust (`.rs`), Ruby (`.rb`), PHP (`.php`)
+- **Python**: `.py`
+- **JavaScript/TypeScript**: `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`
+- **Java**: `.java`
+- **C/C++**: `.c`, `.cpp`, `.h`, `.hpp`
+- **Go**: `.go`
+- **Rust**: `.rs`
+- **Ruby**: `.rb`
+- **PHP**: `.php`
 
-**Documentation & Config:**
-- Markdown (`.md`), Plain text (`.txt`)
-- JSON (`.json`), YAML (`.yaml`, `.yml`), TOML (`.toml`)
+**Documentation:**
+- **Markdown**: `.md`
+- **Plain Text**: `.txt`
 
-**Scripts:**
-- Shell (`.sh`, `.bash`, `.zsh`)
+**Configuration Files:**
+- **JSON**: `.json`
+- **YAML**: `.yaml`, `.yml`
+- **TOML**: `.toml`
+
+**Shell Scripts:**
+- **Bash/Shell**: `.sh`, `.bash`, `.zsh`
+
+**Complete list**: `.py`, `.txt`, `.md`, `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`, `.java`, `.cpp`, `.c`, `.h`, `.hpp`, `.go`, `.rs`, `.rb`, `.php`, `.json`, `.yaml`, `.yml`, `.toml`, `.sh`, `.bash`, `.zsh`
+
+**Unsupported files** (e.g., `.exe`, `.pdf`, `.docx`, `.zip`) will be rejected with a clear error message listing all supported types.
 
 ### Automatically Ignored
 
@@ -68,8 +89,10 @@ Once connected to your LLM, you get six powerful tools:
 ### 📥 add_document(file_path_or_url)
 Add documents to the knowledge base
 - Local files: `"/path/to/file.py"`
+- Local folders: `"./src/"`
 - GitHub repos: `"https://github.com/user/repo"`
 - GitHub files: `"https://github.com/user/repo/blob/main/..."`
+- Direct URLs: `"https://example.com/data.json"`
 - Smart: Skips if already indexed with same content
 - Extracts content, creates embeddings, stores in LanceDB
 
@@ -211,5 +234,78 @@ LLM: [Processes all contract documents]
 You: Find all termination clauses and summarize the notice periods
 
 LLM: [Searches and summarizes termination terms across all contracts]
+```
+
+### Example 5: Add Files from URLs
+```
+You: Add https://example.com/api/openapi.yaml to the knowledge base
+
+LLM: [Fetches and processes the file]
+     ✓ Document 'openapi.yaml' added successfully with 45 chunks
+
+You: What endpoints are defined in this API?
+
+LLM: [Searches the OpenAPI spec and lists all endpoints]
+```
+
+### Example 6: Add Configuration Files
+```
+You: Add https://cdn.example.com/config/production.json
+
+LLM: [Downloads and processes the config file]
+     ✓ Document 'production.json' added successfully with 8 chunks
+
+You: What database settings are configured?
+
+LLM: [Extracts and explains database configuration]
+```
+
+---
+
+## Error Handling
+
+Context Lens provides clear error messages for common issues:
+
+### Unsupported File Types
+
+```
+You: Add https://example.com/document.pdf
+
+LLM: ✗ Error: Unsupported file type '.pdf'. 
+     Supported types: .py, .txt, .md, .js, .jsx, .ts, .tsx, .mjs, .cjs, 
+     .java, .cpp, .c, .h, .hpp, .go, .rs, .rb, .php, .json, .yaml, .yml, 
+     .toml, .sh, .bash, .zsh
+```
+
+### File Not Found
+
+```
+You: Add /path/to/nonexistent/file.py
+
+LLM: ✗ Error: File not found: /path/to/nonexistent/file.py
+```
+
+### URL Fetch Errors
+
+```
+You: Add https://example.com/missing.json
+
+LLM: ✗ Error: HTTP error 404: Not Found
+```
+
+### File Too Large
+
+```
+You: Add /path/to/huge-file.txt
+
+LLM: ✗ Error: File too large (15.2 MB). Maximum size: 10 MB
+```
+
+### Invalid GitHub URL
+
+```
+You: Add https://github.com/invalid
+
+LLM: ✗ Error: Invalid GitHub URL format
 ```
 

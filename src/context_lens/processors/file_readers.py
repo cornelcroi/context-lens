@@ -71,10 +71,11 @@ class FileReader(ABC):
         ".bash",
         ".zsh",  # Shell scripts
     ]
-    MAX_FILE_SIZE_MB = 10
+    MAX_FILE_SIZE_MB = 10  # Default, can be overridden
 
-    def __init__(self):
-        self.max_file_size_bytes = self.MAX_FILE_SIZE_MB * 1024 * 1024
+    def __init__(self, max_file_size_mb: int = 10):
+        self.max_file_size_mb = max_file_size_mb
+        self.max_file_size_bytes = self.max_file_size_mb * 1024 * 1024
 
     @abstractmethod
     def can_read(self, file_path: str) -> bool:
@@ -386,8 +387,12 @@ class TextFileReader(FileReader):
 class FileReaderFactory:
     """Factory for creating appropriate file readers."""
 
-    def __init__(self):
-        self._readers = [PythonFileReader(), TextFileReader()]
+    def __init__(self, max_file_size_mb: int = 10):
+        self.max_file_size_mb = max_file_size_mb
+        self._readers = [
+            PythonFileReader(max_file_size_mb=max_file_size_mb),
+            TextFileReader(max_file_size_mb=max_file_size_mb)
+        ]
 
     def get_reader(self, file_path: str) -> FileReader:
         """Get appropriate reader for the file type."""
@@ -399,7 +404,7 @@ class FileReaderFactory:
         path = Path(file_path)
         if path.suffix.lower() in FileReader.SUPPORTED_EXTENSIONS:
             # Default to text reader for supported extensions
-            return TextFileReader()
+            return TextFileReader(max_file_size_mb=self.max_file_size_mb)
 
         raise FileProcessingError(
             f"No reader available for file type: {path.suffix}",

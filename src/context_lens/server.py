@@ -149,10 +149,16 @@ async def reset_document_service() -> None:
 async def add_document(file_path: str) -> Dict[str, Any]:
     """Adds a document or GitHub repository to the knowledge base.
 
-    Supports local files, GitHub repositories, files, and directories.
+    Supports local files, GitHub repositories, and direct file URLs.
+    
+    Supported file types: .py, .txt, .md, .js, .jsx, .ts, .tsx, .mjs, .cjs, 
+    .java, .cpp, .c, .h, .hpp, .go, .rs, .rb, .php, .json, .yaml, .yml, 
+    .toml, .sh, .bash, .zsh
+    
+    Maximum file size: 10 MB (configurable via MAX_FILE_SIZE_MB environment variable)
 
     Args:
-        file_path (str): Path to document file or GitHub URL
+        file_path (str): Path to document file, GitHub URL, or direct file URL
 
     Returns:
         dict: Success status and document metadata or error details

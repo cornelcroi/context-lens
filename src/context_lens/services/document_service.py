@@ -20,6 +20,11 @@ from ..utils.github_handler import (
     is_github_url,
     parse_github_url,
 )
+from ..utils.url_fetcher import (
+    URLFetchError,
+    fetch_file_from_url,
+    is_direct_file_url,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +46,7 @@ class DocumentService:
         self.content_extractor = ContentExtractor(
             chunk_size=self.config.processing.chunk_size,
             chunk_overlap=self.config.processing.chunk_overlap,
+            max_file_size_mb=self.config.processing.max_file_size_mb,
         )
 
         self._initialized = False
@@ -80,9 +86,10 @@ class DocumentService:
         - GitHub repository URLs: "https://github.com/user/repo"
         - GitHub file URLs: "https://github.com/user/repo/blob/main/file.py"
         - GitHub directory URLs: "https://github.com/user/repo/tree/main/src"
+        - Direct file URLs: "https://example.com/data.json"
 
         Args:
-            file_path: Path to document file or GitHub URL
+            file_path: Path to document file, GitHub URL, or direct file URL
 
         Returns:
             Dictionary containing success status and document metadata or error details
@@ -92,6 +99,10 @@ class DocumentService:
         # Check if it's a GitHub URL
         if is_github_url(file_path):
             return await self._add_github_repository(file_path)
+
+        # Check if it's a direct file URL
+        if is_direct_file_url(file_path):
+            return await self._add_url_file(file_path)
 
         # Handle local file
         return await self._add_local_file(file_path)
@@ -179,6 +190,116 @@ class DocumentService:
                 "error_message": f"Failed to add document: {str(e)}",
                 "error_details": {"file_path": file_path, "error": str(e)},
             }
+
+    async def _add_url_file(self, url: str) -> Dict[str, Any]:
+        """Add a file from a URL to the knowledge base.
+
+        Args:
+            url: URL to fetch the file from
+
+        Returns:
+            Dictionary containing success status and document metadata or error details
+        """
+        self._ensure_initialized()
+        temp_path = None
+
+        try:
+            logger.info(f"Fetching file from URL: {url}")
+
+            # Fetch file to temporary location
+            try:
+                temp_path, filename = await fetch_file_from_url(
+                    url, 
+                    max_file_size_mb=self.config.processing.max_file_size_mb
+                )
+            except URLFetchError as e:
+                logger.error(f"Failed to fetch URL {url}: {e}")
+                return {
+                    "success": False,
+                    "error_type": "url_fetch_error",
+                    "error_message": str(e),
+                    "error_details": {"url": url},
+                }
+
+            # Process the downloaded file
+            try:
+                metadata, chunks = self.content_extractor.extract_and_chunk(str(temp_path))
+            except FileProcessingError as e:
+                logger.error(f"File processing failed for URL {url}: {e}")
+                return {
+                    "success": False,
+                    "error_type": e.error_type,
+                    "error_message": str(e),
+                    "error_details": e.details,
+                }
+
+            # Override metadata to use original URL instead of temp path
+            metadata.file_path = url
+            metadata.file_name = filename
+
+            # Check if document already exists with same content hash
+            existing_doc_info = await self.get_document_info(url)
+            if existing_doc_info.get("success"):
+                existing_hash = existing_doc_info["document"].get("content_hash")
+                if existing_hash == metadata.content_hash:
+                    logger.info(f"URL {url} already exists with same content, skipping")
+                    return {
+                        "success": True,
+                        "skipped": True,
+                        "document": existing_doc_info["document"],
+                        "message": f"Document '{filename}' already up-to-date (same content hash)",
+                    }
+                else:
+                    logger.info(f"URL {url} content changed, updating")
+                    await self.db_manager.remove_document(url)
+
+            # Set ingestion timestamp
+            metadata.ingestion_timestamp = datetime.utcnow()
+
+            # Generate embeddings for chunks
+            if chunks:
+                chunk_texts = [chunk.content for chunk in chunks]
+                embeddings = await self.embedding_service.generate_embeddings(chunk_texts)
+
+                for chunk, embedding in zip(chunks, embeddings):
+                    chunk.embedding = embedding
+
+            # Store in vector database
+            await self.db_manager.add_document_vectors(metadata, chunks)
+
+            logger.info(f"Successfully added URL {url} with {len(chunks)} chunks")
+
+            return {
+                "success": True,
+                "document": {
+                    "id": metadata.id,
+                    "file_path": metadata.file_path,
+                    "file_name": metadata.file_name,
+                    "file_size": metadata.file_size,
+                    "file_type": metadata.file_type,
+                    "ingestion_timestamp": metadata.ingestion_timestamp.isoformat(),
+                    "content_hash": metadata.content_hash,
+                    "chunk_count": metadata.chunk_count,
+                },
+                "message": f"Document '{filename}' added successfully with {len(chunks)} chunks",
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to add URL {url}: {e}")
+            return {
+                "success": False,
+                "error_type": "document_ingestion_error",
+                "error_message": f"Failed to add document from URL: {str(e)}",
+                "error_details": {"url": url, "error": str(e)},
+            }
+        finally:
+            # Clean up temporary file
+            if temp_path and temp_path.exists():
+                try:
+                    temp_path.unlink()
+                    logger.debug(f"Cleaned up temporary file: {temp_path}")
+                except Exception as e:
+                    logger.warning(f"Failed to clean up temporary file {temp_path}: {e}")
 
     async def _add_github_repository(self, github_url: str) -> Dict[str, Any]:
         """Add files from a GitHub repository to the knowledge base.

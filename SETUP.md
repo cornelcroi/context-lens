@@ -305,7 +305,7 @@ All configuration can be set via environment variables:
 | `MCP_SERVER_NAME` | `knowledge-base` | Server name for identification |
 | `EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Embedding model to use |
 | `EMBEDDING_BATCH_SIZE` | `32` | Batch size for embedding processing |
-| `MAX_FILE_SIZE_MB` | `10` | Maximum file size to process (MB) |
+| `MAX_FILE_SIZE_MB` | `10` | Maximum file size to process (MB) - applies to local files and URLs |
 | `CHUNK_SIZE` | `1000` | Text chunk size for processing |
 | `CHUNK_OVERLAP` | `200` | Overlap between text chunks |
 | `SUPPORTED_EXTENSIONS` | See [Technical Details](TECHNICAL.md) | Comma-separated list of file extensions |
