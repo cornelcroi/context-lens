@@ -8,7 +8,8 @@
 
 ## What is Context Lens?
 
-Context Lens is a self-contained Model Context Protocol (MCP) server with built-in serverless vector storage (LanceDB) that brings semantic search to your AI assistant. Point it at any content - codebases, documentation, contracts, or text files - and your AI can instantly understand and answer questions about the content.
+Context Lens transforms any content into a **searchable knowledge base** for your AI assistant. This self-contained Model Context Protocol (MCP) server with built-in serverless vector storage (LanceDB) brings semantic search to your conversations. Point it at any content - codebases, documentation, contracts, or text files - and your AI can instantly understand and answer questions about the content.
+
 
 **Traditional keyword search** finds files containing specific words. Miss the exact term? Miss the content.
 
