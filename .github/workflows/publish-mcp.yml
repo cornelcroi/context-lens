@@ -1,0 +1,74 @@
+name: Publish to MCP Registry
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for GitHub OIDC authentication
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install validation dependencies
+        run: |
+          pip install jsonschema requests
+      
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+      
+      - name: Update server.json version
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          # Install jq for JSON manipulation
+          sudo apt-get update && sudo apt-get install -y jq
+          # Update version fields in server.json
+          jq --arg v "$VERSION" '.version = $v | .packages[0].version = $v' server.json > server.json.tmp
+          mv server.json.tmp server.json
+          echo "Updated server.json to version $VERSION"
+          cat server.json
+      
+      - name: Validate server.json
+        run: |
+          python validate_server_json.py
+      
+      - name: Download mcp-publisher CLI
+        run: |
+          # Download the latest mcp-publisher for Linux
+          curl -L -o mcp-publisher https://github.com/modelcontextprotocol/mcp-cli/releases/latest/download/mcp-publisher-linux-x64
+          chmod +x mcp-publisher
+          ./mcp-publisher --version
+      
+      - name: Authenticate with GitHub OIDC
+        run: |
+          ./mcp-publisher login github-oidc
+      
+      - name: Publish to MCP Registry
+        run: |
+          ./mcp-publisher publish
+          echo "Successfully published to MCP Registry!"
+      
+      - name: Display registry information
+        run: |
+          echo "Server published to MCP Registry"
+          echo "Registry name: io.github.cornelcroi/context-lens"
+          echo "Version: ${{ steps.version.outputs.version }}"
+          echo ""
+          echo "Verify at: https://registry.modelcontextprotocol.io/search?q=context-lens"
+          echo "Install with: uvx context-lens"

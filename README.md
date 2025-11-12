@@ -129,6 +129,14 @@ For Claude Desktop, Continue.dev, or any MCP-compatible client:
 
 > 📖 **Need detailed setup instructions?** See [SETUP.md](SETUP.md) for all clients, programmatic usage, and configuration options.
 
+## MCP Registry
+
+Context Lens is published to the official [Model Context Protocol Registry](https://registry.modelcontextprotocol.io/) as `io.github.cornelcroi/context-lens`.
+
+> 📖 **Registry details and verification:** See [REGISTRY.md](REGISTRY.md) for installation verification and registry information.
+
+<!-- mcp-name: io.github.cornelcroi/context-lens -->
+
 ## Programmatic Usage
 
 Use Context Lens directly in your Python applications:
@@ -355,7 +363,9 @@ Yes! All processing happens locally. Nothing is sent to external services.
 - 🎨 **[Parsing Examples](PARSING_EXAMPLES.md)** - How smart parsing works
 - 🔧 **[Troubleshooting](TROUBLESHOOTING.md)** - Common issues and solutions
 - ⚙️ **[Technical Details](TECHNICAL.md)** - Architecture, stack, and performance
+- 📋 **[Registry Information](REGISTRY.md)** - MCP Registry verification and installation
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute, roadmap
+- 📦 **[Publishing Guide](PUBLISHING.md)** - MCP Registry publishing process (for maintainers)
 
 ## Contributing
 
