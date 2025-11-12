@@ -249,6 +249,20 @@ LLM: Payment terms vary by contract type:
      - Vendor agreements: 50% upfront, 50% on delivery...
 ```
 
+### Fetch Files from URLs
+```
+You: Add https://raw.githubusercontent.com/fastapi/fastapi/master/README.md
+LLM: ✓ Document 'README.md' added successfully with 42 chunks
+
+You: What is FastAPI and what are its key features?
+LLM: FastAPI is a modern, fast web framework for building APIs with Python 3.7+.
+     Key features include:
+     - Fast performance (on par with NodeJS and Go)
+     - Automatic API documentation
+     - Type hints for validation
+     - Async support built-in...
+```
+
 > 📖 **More examples and query patterns:** [USAGE_GUIDE.md](USAGE_GUIDE.md)
 
 ## Smart Parsing & Chunking
