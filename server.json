@@ -3,12 +3,12 @@
   "name": "io.github.cornelcroi/context-lens",
   "title": "Context Lens",
   "description": "Semantic search knowledge base for AI assistants with vector storage",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "context-lens",
-      "version": "0.1.3",
+      "version": "0.1.5",
       "transport": {
         "type": "stdio"
       }
