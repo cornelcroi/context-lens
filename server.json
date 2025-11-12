@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.cornelcroi/context-lens",
   "title": "Context Lens",
-  "description": "Semantic search for local files, GitHub repos, and URLs. Zero setup, 100% local, 25+ file types.",
+  "description": "Semantic search knowledge base with serverless LanceDB. Zero setup, 100% local, 25+ file types",
   "version": "0.1.6",
   "packages": [
     {
