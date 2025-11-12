@@ -61,14 +61,16 @@ jobs:
       
       - name: Download mcp-publisher CLI
         run: |
-          # Download the latest mcp-publisher for Linux
-          curl -L -o mcp-publisher https://github.com/modelcontextprotocol/mcp-cli/releases/latest/download/mcp-publisher-linux-x64
+          # Download from the registry repository releases
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
           chmod +x mcp-publisher
           ./mcp-publisher --version
       
-      - name: Authenticate with GitHub OIDC
+      - name: Authenticate with GitHub
         run: |
-          ./mcp-publisher login github-oidc
+          # GitHub Actions provides GITHUB_TOKEN automatically
+          # The publisher CLI will use it for authentication
+          ./mcp-publisher login github --token ${{ secrets.GITHUB_TOKEN }}
       
       - name: Publish to MCP Registry
         run: |
