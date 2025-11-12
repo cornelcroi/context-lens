@@ -3,12 +3,12 @@
   "name": "io.github.cornelcroi/context-lens",
   "title": "Context Lens",
   "description": "Semantic search knowledge base MCP server with serverless LanceDB storage",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "context-lens",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "transport": {
         "type": "stdio"
       }
