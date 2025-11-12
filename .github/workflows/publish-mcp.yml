@@ -14,6 +14,7 @@ on:
 permissions:
   id-token: write  # Required for GitHub OIDC authentication
   contents: read
+  packages: read   # Required for registry authentication
 
 jobs:
   publish:
@@ -66,11 +67,10 @@ jobs:
           chmod +x mcp-publisher
           ./mcp-publisher --version
       
-      - name: Authenticate with GitHub
+      - name: Authenticate with GitHub OIDC
         run: |
-          # GitHub Actions provides GITHUB_TOKEN automatically
-          # The publisher CLI will use it for authentication
-          ./mcp-publisher login github --token ${{ secrets.GITHUB_TOKEN }}
+          # Use GitHub OIDC for authentication (no token needed)
+          ./mcp-publisher login github-oidc
       
       - name: Publish to MCP Registry
         run: |
