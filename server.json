@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.cornelcroi/context-lens",
   "title": "Context Lens",
-  "description": "Semantic search MCP server for your AI assistant. Index files from your computer, GitHub repos, or web URLs - search by meaning, not keywords. Zero setup, 100% local, no API keys. Supports 25+ file types with smart code parsing.",
+  "description": "Semantic search MCP server. Index local files, GitHub repos, or URLs - search by meaning, not keywords. Zero setup, 100% local, no API keys. Supports 25+ file types.",
   "version": "0.1.6",
   "packages": [
     {
