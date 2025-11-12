@@ -53,7 +53,27 @@ python -m twine upload dist/*
 
 ### 3. Trigger Registry Publishing
 
-Push a version tag to trigger the automated publishing workflow:
+You can trigger the publishing workflow in two ways:
+
+#### Option A: Manual Trigger (Recommended)
+
+Trigger the workflow manually from GitHub Actions:
+
+1. Go to: https://github.com/cornelcroi/context-lens/actions
+2. Click on "Publish to MCP Registry" workflow
+3. Click the "Run workflow" button
+4. Enter the version number (e.g., `0.1.4`)
+5. Click "Run workflow"
+
+**Benefits:**
+- No need to create/push tags
+- Can republish any version
+- Easier for testing
+- More control over timing
+
+#### Option B: Push Version Tag
+
+Push a version tag to automatically trigger the workflow:
 
 ```bash
 # Create and push a version tag
@@ -62,6 +82,11 @@ git push origin v0.1.4
 ```
 
 **Tag format:** Must start with `v` followed by semantic version (e.g., `v0.1.4`, `v1.0.0`)
+
+**Benefits:**
+- Automatic on release
+- Creates permanent version marker
+- Standard Git workflow
 
 ### 4. Monitor Workflow
 
@@ -101,12 +126,21 @@ Location: `.github/workflows/publish-mcp.yml`
 
 ### Trigger
 
-The workflow triggers automatically when a tag matching `v*` is pushed:
+The workflow can be triggered in two ways:
+
+1. **Automatically** when a tag matching `v*` is pushed
+2. **Manually** via GitHub Actions UI with workflow_dispatch
 
 ```yaml
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.1.4)'
+        required: true
+        type: string
 ```
 
 ### Workflow Steps
