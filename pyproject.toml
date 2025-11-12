@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "context-lens"
-version = "0.1.6"
+version = "0.1.7"
 description = "Context Lens - Give your LLM glasses to understand meaning, not just read words. Semantic search for AI assistants."
 readme = "README.md"
 requires-python = ">=3.11"
