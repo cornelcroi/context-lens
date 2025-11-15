@@ -19,8 +19,14 @@ def parse_arguments() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Start server with default configuration
+  # Start server with default configuration (stdio transport)
   %(prog)s
+
+  # Start with HTTP transport
+  %(prog)s --transport http --port 8080
+
+  # Start with HTTP transport on specific host and port
+  %(prog)s --transport http --host 0.0.0.0 --port 8080
 
   # Start with custom config file
   %(prog)s --config config.yaml
@@ -32,7 +38,7 @@ Examples:
   %(prog)s --db-path ./my_knowledge_base.db
 
   # Combine multiple options
-  %(prog)s --config config.yaml --log-level DEBUG
+  %(prog)s --config config.yaml --log-level DEBUG --transport http --port 8080
 
 Environment Variables:
   Configuration can also be set via environment variables.
@@ -64,6 +70,27 @@ Environment Variables:
         help="Path to LanceDB database (default: ./knowledge_base.db or from config)",
     )
 
+    # Transport options
+    parser.add_argument(
+        "--transport",
+        type=str,
+        choices=["stdio", "http", "sse", "streamable-http"],
+        default="stdio",
+        help="Transport protocol to use (default: stdio)",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="127.0.0.1",
+        help="Host address to bind to for HTTP/SSE transports (default: 127.0.0.1)",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to bind to for HTTP/SSE transports (default: 8000)",
+    )
+
     # Display options
     parser.add_argument("--version", action="version", version="%(prog)s 0.1.0")
 
@@ -83,7 +110,7 @@ def run() -> None:
     5. Delegates to FastMCP's app.run() for server execution
 
     FastMCP handles:
-    - stdio transport setup
+    - Transport setup (stdio, http, sse, streamable-http)
     - Signal handling (SIGINT, SIGTERM)
     - Server lifecycle management
     - Graceful shutdown
@@ -130,9 +157,28 @@ def run() -> None:
         os.environ["SUPPORTED_EXTENSIONS"] = ",".join(config.processing.supported_extensions)
         os.environ["MCP_SERVER_NAME"] = config.server.name
 
+        # Prepare transport arguments for FastMCP
+        transport_kwargs = {}
+        
+        if args.transport == "stdio":
+            # For stdio, no additional parameters needed
+            # (host and port are ignored for stdio transport)
+            transport_kwargs = {}
+        else:
+            # For HTTP/SSE transports, include host and port
+            transport_kwargs = {
+                "transport": args.transport,
+                "host": args.host,
+                "port": args.port,
+            }
+        
+        # Override log level if specified via CLI
+        if args.log_level:
+            transport_kwargs["log_level"] = args.log_level
+
         # Run the FastMCP server
-        # FastMCP handles stdio transport, signal handling, and lifecycle
-        app.run()
+        # FastMCP handles transport setup, signal handling, and lifecycle
+        app.run(**transport_kwargs)
 
     except ConfigurationError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
