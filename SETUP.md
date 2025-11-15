@@ -245,6 +245,9 @@ Context Lens supports various CLI parameters for customization:
 - `--config PATH` - Path to YAML configuration file
 - `--db-path PATH` - Path to LanceDB database (overrides default location)
 - `--log-level LEVEL` - Logging level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+- `--transport {stdio,http,sse,streamable-http}` - Transport protocol (default: stdio)
+- `--host ADDRESS` - Host address for HTTP/SSE/streamable-http transports (default: 127.0.0.1)
+- `--port PORT` - Port for HTTP/SSE/streamable-http transports (default: 8000)
 - `--show-config` - Display current configuration and exit
 - `--version` - Show version information
 - `--help` - Show help message
