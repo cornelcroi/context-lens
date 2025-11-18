@@ -96,6 +96,7 @@ Add to `.kiro/settings/mcp.json`:
 }
 ```
 
+
 Reload: Command Palette → "MCP: Reload Servers"
 
 ### Cursor
