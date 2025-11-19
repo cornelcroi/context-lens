@@ -77,20 +77,6 @@ where = ["src"]
 [tool.setuptools.package-dir]
 "" = "src"
 
-# UV configuration for CPU-only PyTorch
-[tool.uv]
-# Add PyTorch CPU-only index
-index-url = "https://pypi.org/simple"
-extra-index-url = ["https://download.pytorch.org/whl/cpu"]
-
-# Optional: Specify constraints for CPU-only packages
-[tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true
 
 [tool.black]
 line-length = 100

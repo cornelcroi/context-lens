@@ -448,4 +448,5 @@ if __name__ == "__main__":
     - Server lifecycle management
     """
     logger.info("Starting Context Lens MCP Server in stdio mode...")
-    mcp.run()
+    #mcp.run()
+    mcp.run(transport="streamable-http")
