@@ -84,6 +84,7 @@ When you add content to Context Lens, it doesn't just dump text into a database.
 
 Add to `.kiro/settings/mcp.json`:
 
+
 ```json
 {
   "mcpServers": {
