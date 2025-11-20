@@ -442,11 +442,36 @@ if __name__ == "__main__":
     This allows running the server with:
         python -m context_lens.server
 
+    Environment variables:
+    - TRANSPORT_MODE: "stdio" (default, for local development) or "http" (for deployment)
+    - HOST_BINDING: Host to bind to in HTTP mode (default: "127.0.0.1" for localhost)
+    - PORT: Port to bind to in HTTP mode (default: 8000)
+
     FastMCP's run() method handles:
     - stdio transport setup
     - Signal handling
     - Server lifecycle management
     """
-    logger.info("Starting Context Lens MCP Server in stdio mode...")
-    #mcp.run()
-    mcp.run(transport="streamable-http")
+    import os
+    
+    # Get transport mode from environment variable
+    # Default: stdio for local development and MCP Inspector
+    transport_mode = os.environ.get("TRANSPORT_MODE", "stdio").lower()
+    
+    if transport_mode == "http":
+        # HTTP mode for alpic.ai deployment or other HTTP-based deployments
+        # Default to localhost binding for security
+        # Can be overridden with HOST_BINDING environment variable
+        host = os.environ.get("HOST_BINDING", "localhost")
+        port = int(os.environ.get("PORT", "8000"))
+        
+        logger.info(f"Starting Context Lens MCP Server in HTTP mode on {host}:{port}...")
+        logger.info(f"Configuration: stateless_http=True, host={host}, port={port}")
+        # stateless_http=True enables compatibility with alpic.ai deployment platform
+        mcp.run(transport="streamable-http", host=host, port=port, stateless_http=True)
+    else:
+        # stdio mode for local development and MCP Inspector
+        logger.info("Starting Context Lens MCP Server in stdio mode...")
+        # stateless_http=True enables compatibility with alpic.ai deployment platform
+        # This setting is applied to both transport modes for consistency
+        mcp.run(stateless_http=True)

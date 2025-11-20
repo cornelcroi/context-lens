@@ -45,7 +45,7 @@ def run() -> None:
         print("🚀 Starting Context Lens MCP Server")
         print("=" * 60)
         print(f"📡 Transport: http")
-        print(f"🌐 Host: 0.0.0.0")
+        print(f"🌐 Host: localhost")
         print(f"🔌 Port: 8000")
         print(f"📊 Log level: {config.server.log_level}")
         print(f"💾 Database: {config.database.path}")
@@ -54,7 +54,7 @@ def run() -> None:
 
         # Run the FastMCP server with http transport
         # This explicit pattern matches the FastMCP best practices
-        app.run(transport="http", host="0.0.0.0", port=8000)
+        app.run(transport="http", host="localhost", port=8000, stateless_http=True)
 
     except ConfigurationError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
